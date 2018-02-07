@@ -7,9 +7,13 @@ body {
     height: 100%;
 }
 
+h1 {
+    color: #244751;
+}
+
 #map {
     height: 100%;
-    width: 60%;
+    width: 65%;
     float: left;
 }
 
@@ -17,7 +21,7 @@ body {
     z-index: 1;
     background-color: white;
     height: 100vh;
-    width: 40%;
+    width: 35%;
     overflow-y: scroll;
     overflow-x: hidden;
     float: right;
@@ -25,7 +29,7 @@ body {
 
 .sidebar_header {
     background-color: #297cbb;
-    height: 200px;
+    height: 180px;
     width: 100%;
     position: fixed;
     padding: 20px 20px 10px;
@@ -36,15 +40,17 @@ body {
     font-weight: 500;
     font-size: 46px;
     margin-top: 10px;
+    margin-left: 10px;
 }
 
 .back_button {
     color: lightgrey;
     font-weight: 300;
+    margin-left: 10px;
 }
+
 .sidebar_panel {
     // no specific styling for now
-
 }
 
 .detail_image {
@@ -56,10 +62,12 @@ body {
 .panel_content {
     // float:right;
     font-size: 16px;
-    padding: 20px 40px 20px 40px; 
- 
+    padding: 30px 50px 30px 50px;
 }
 
-h1 {
-    color: #244751;
+.point_element {
+    border: 1.5px solid lightgrey;
 }
+
+
+
