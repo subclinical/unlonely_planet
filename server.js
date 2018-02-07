@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //   outputStyle: 'expanded'
 // }));
 
-app.use(sassMiddleware({
+app.use(sass({
   src: './styles',
   dest: './public/styles',
   prefix: '/css'
