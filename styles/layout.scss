@@ -1,20 +1,65 @@
 html {
-  height: 100%;
+    height: 100%;
 }
+
 body {
-  background-color: #EEE;
-  height: 100%;
+    background-color: #EEE;
+    height: 100%;
+}
 
-  #map {
-    height: 100%
-  }
+#map {
+    height: 100%;
+    width: 60%;
+    float: left;
+}
 
-  
+.sidebar {
+    z-index: 1;
+    background-color: white;
+    height: 100vh;
+    width: 40%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    float: right;
+}
 
-  h1 {
+.sidebar_header {
+    background-color: #297cbb;
+    height: 200px;
+    width: 100%;
+    position: fixed;
+    padding: 20px 20px 10px;
+}
+
+.sidebar_title {
+    color: white;
+    font-weight: 500;
+    font-size: 46px;
+    margin-top: 10px;
+}
+
+.back_button {
+    color: lightgrey;
+    font-weight: 300;
+}
+.sidebar_panel {
+    // no specific styling for now
+
+}
+
+.detail_image {
+    // float: right;
+    margin-top: 200px;
+    width: 100%;
+}
+
+.panel_content {
+    // float:right;
+    font-size: 16px;
+    padding: 20px 40px 20px 40px; 
+ 
+}
+
+h1 {
     color: #244751;
-  }
-
-
-
 }
