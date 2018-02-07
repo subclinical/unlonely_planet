@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
 
     <!-- App CSS -->
-    <link rel="stylesheet" href="/css/layout.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
 
 
     <!-- Font -->
@@ -19,8 +19,14 @@
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
 
     <!-- App JS -->
-    <script var map; function initMap() { map = new google.maps.Map(document.getElementById('map'), { center: {lat: -34.397, lng: 150.644},
-    zoom: 8 }); }></script>
+    <script>
+        var map; function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: -34.397, lng: 150.644 },
+                zoom: 8
+            });
+        }
+    </script>
 
     <!-- Font awesome icons -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
@@ -36,9 +42,9 @@
 
     <!-- Map here -->
     <div id="map"></div>
-    
-    
 
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaQFxOCH5BOgEQPHsu3-Y2O8N6xh5iPJU&callback=initMap" async defer></script>
 </body>
 
 </html>
