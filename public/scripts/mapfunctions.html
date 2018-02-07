@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>maps</title>
+    <!-- <link rel="stylesheet" href="/maps/documentation/javascript/demos/demos.css"> -->
+
+   <style>
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+
+  </head>
+
+  <body>
+
+    <h1> test file </h1>
+
+      <div id="map"></div>
+
+<!--           <script>
+      function initMap() {
+        var uluru = {lat: -25.363, lng: 131.044};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+          </script> -->
+
+RIO
+          22.9068° S, 43.1729° W
+
+<!-- if you want to load map based on some other action, here is how -->
+     <script>
+      function initMap() {
+        var options = {
+          zoom:2,
+          center: {lat: 43.644870, lng: -79.395009}
+          // center: {lat: -22.9068, lng: -43.1729}
+        }
+
+      // new map
+        var map = new google.maps.Map(document.getElementById('map'), options);
+
+        // listen for click:
+          google.maps.event.addListener(map, 'click',
+          function(event){
+          console.log("clicked")
+          addMarker({coords: event.latLng});
+          console.log(event.latLng)
+        });
+
+
+        // add marker funtion
+        function addMarker(props) {
+          var marker = new google.maps.Marker({
+          position: props.coords,
+          map:map,
+          });
+          if(props.iconImage) {
+            marker.setIcon(props.iconImage);
+          }
+          if(props.content) {
+            var infoWindow = new google.maps.InfoWindow({
+            content: props.content
+          });
+          marker.addListener('click', function () {
+            infoWindow.open(map, marker);
+          });
+          }
+        }
+
+        var markers = [{
+          coords: {lat: 43.644870, lng: -79.395009},
+        iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+          content: '<h1>Technology Center<h1>'
+        },
+        {
+          coords: {lat: 43.670367, lng: -79.392215},
+          content: '<h1>hello world</h2>'
+        },
+        {
+          coords: {lat: 43.648351, lng: -79.395820}
+        }
+        ];
+
+        for (var i = 0; i < markers.length; i++) {
+          addMarker(markers[i]);
+        };
+
+
+
+    }
+
+
+      </script>
+
+<!-- this call back runs initMap when page loads -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1dPRw0yLSfdiOZ1DrozH4iIFM1tPoOAw&callback=initMap"
+    async defer></script>
+
+
+  </body>
+</html>
