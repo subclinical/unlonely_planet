@@ -22,7 +22,6 @@ module.exports = (knex) => {
       .where('id', req.body.map_id)
       .then((map_info) => {
         return map_info;
-        console.log(typeof map_info);
       })
       .then((map_info) => {
         knex
@@ -46,7 +45,9 @@ module.exports = (knex) => {
   });
 
   //routes get requests for new map showing 
-
+  router.get('/new', (req, res) => {
+    //
+  });
   //routes post requests for new map creations
   router.post('/new', (req, res) => {
     knex
@@ -56,14 +57,34 @@ module.exports = (knex) => {
         lng: req.body.lng,
         zoom: req.body.zoom,
         creator_id: req.body.user_id, //swap to session.id when ready
-        date: new Date()
-      })
+        date_created: new Date()
+      }, ['*'])
       .into('maps')
-      .then(() => {
-        console.log('New map added.');
+      .then((newMap) => {
+        console.log(newMap);
+        res.status(200).send("NICE");
       });
   });
 
+  //routes to post markers on a map
+  router.post('/marker', (req, res) => {
+    console.log(req.body);
+    knex
+      .insert({
+        label: req.body.label,
+        map_id: req.body.map_id,
+        lat: req.body.lat,
+        lng: req.body.lng,
+        user_id: req.body.user_id, //swap to session.id when ready
+        date_created: new Date(),
+        description: req.body.description
+      }, ['*'])
+      .into('markers')
+      .then((added) => {
+        console.log(added);
+        res.status(200).send('Nice');
+      })
+  });
 
 
   return router;
