@@ -1,12 +1,4 @@
 
-
-
-$(document).ready(function() {
-    console.log("ready to go MAPS!");
-});
-
-$(document).on('ready', function () {
-
 // blank page
 // 5 buttons - toronto NYC tokyo paris LA
 // either:
@@ -19,56 +11,66 @@ $(document).on('ready', function () {
 
 // var loadMaps = function () {
 
-// $.ajax({
-//   url: '/maps/:id',
-//   method: 'GET',
-//   success: function (response) {
-//     console.log('Success: ', response);
-//     $('#maps-container').empty();
-//     renderMap(response);
-//     }
-//   })
+$.ajax({
+  url: '/maps/:id',     123456
+  method: 'GET',
+  success: function (response) {
+    console.log('Success: ', response);
+    $('#maps-container').empty();
+    renderMap(response);
+    }
+  })
 
 // }
 
-var renderMap = function (response) {
-  function initMap() {
-  var options = {
-  zoom: 10,
-  center: {lat: mapinfo.lat, lng: mapinfo.lng }
+// var renderMap = function () { // can we get mapOptions from the response
+  // function initMap() {
+  // var mapOptions = {
+  // zoom: 10,
+  // center: {lat: mapinfo.lat, lng: mapinfo.lng }
+  // }
+
+  var markers = [{
+  lat: 43.648239,
+  lng: -79.395851,
+  },
+{
+  lat: 43.618487,
+  lng: -79.534538,
+},
+{
+  lat: 50.120578,
+  lng: -122.957455,
+}];
+
+  mylatLng = { lat: markers[0].lat, lng: markers[0].lng }
+
+  function initMap(maps) {
+
+  var mapOptions = {
+    center: mylatLng // this is from mapID
   }
 
-  var map = new google.maps.Map(document.getElementById('map'), options);
-
-  var markers = for (var i of mapinfo);//some array
   var bounds = new google.maps.LatLngBounds();
-  for (var i = 0; i < markers.length; i++) {
-  bounds.extend(markers[i].getPosition());
+
+  var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+  for (i = 0; i < markers.length; i++) {
+    var position = new google.maps.LatLng(maps.markers[i].lat, maps.markers[i].lng);
+    bounds.extend(position);
+      var marker = new google.maps.Marker({
+      position: position,
+      map: map,
+    });
   }
 
-map.fitBounds(bounds);
-
-
-  var bounds  = new google.maps.LatLngBounds();
-  loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
-  bounds.extend(loc);
   map.fitBounds(bounds);       //# auto-zoom
   map.panToBounds(bounds);     // # auto-center
 
-  }
 }
 
-renderMap(mapinfo);
-
-// });
 
 
-
-// var markers = [];//some array
-// var bounds = new google.maps.LatLngBounds();
-// for (var i = 0; i < markers.length; i++) {
-//  bounds.extend(markers[i].getPosition());
-// }
 
 
 // CLIENT
@@ -81,29 +83,7 @@ renderMap(mapinfo);
 
 
 
-var mapinfo = [{
-  id: 1,
-  title: Fresh on Spadina,
-  lat: 43.648239,
-  lng: -79.395851
-  zoom:
-  date_created:
-  creator_id:
-},
-{ id: 2,
-  title: Ikea,
-  lat: 43.618487,
-  lng: -79.534538
-  zoom:
-  date_created:
-  creator_id:
-},
-{ id: 4,
-  title: Ikea,
-  lat: 50.120578,
-  lng: -122.957455
-  zoom:
-  date_created:
-  creator_id:
-}];
+
+
+
 
