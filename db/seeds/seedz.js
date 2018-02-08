@@ -90,7 +90,37 @@ exports.seed = function(knex, Promise) {
           user_id: 3,
           date_created: new Date(),
           description: 'New way to experience people surfing.'
-        })
+        }),
+        knex('markers').insert({
+          id: 4,
+          map_id: 1,
+          label: 'Brandon\'s House',
+          lat: 43.6562,
+          lng: -79.3632,
+          user_id: 1,
+          date_created: new Date(),
+          description: 'Smoking hot.'
+        }),
+        knex('markers').insert({
+          id: 5,
+          map_id: 1,
+          label: 'I dont know.',
+          lat: 44.6532,
+          lng: -80.3832,
+          user_id: 1,
+          date_created: new Date(),
+          description: 'UH.'
+        }),
+        knex('markers').insert({
+          id: 6,
+          map_id: 1,
+          label: 'Raptors Den.',
+          lat: 45.6532,
+          lng: -78.3832,
+          user_id: 1,
+          date_created: new Date(),
+          description: 'HUH.'
+        }),
       ]);
     })
 };

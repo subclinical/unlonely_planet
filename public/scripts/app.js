@@ -16,25 +16,83 @@ $(document).ready(function () {
   var map;
   bounds = new google.maps.LatLngBounds();
 
-  function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: { lat: 51.5074, lng: -0.1278 },
-      zoom: 8
-    });
+  // function initMap() {
+  //   map = new google.maps.Map(document.getElementById('map'), {
+  //     center: { lat: 51.5074, lng: -0.1278 },
+  //     zoom: 8
+  //   });
+  // }
+
+  // initMap();
+
+
+  function initMap(maps) {
+    mylatLng = { lat: maps.markers[0].lat, lng: maps.markers[0].lng }
+
+    var mapOptions = {
+      center: mylatLng // this is from mapID
+    }
+
+    var bounds = new google.maps.LatLngBounds();
+
+    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+    for (var i = 0; i < maps.markers.length; i++) {
+
+      // (function (i) {
+
+        var position = new google.maps.LatLng(maps.markers[i].lat, maps.markers[i].lng);
+        bounds.extend(position);
+
+        var marker = new google.maps.Marker({
+          position: position,
+          map: map,
+        });
+
+        // marker.addListener('click', function () {
+          // console.log(position.lat)
+          var infoWindow = new google.maps.InfoWindow({ content: maps.markers[i].description, position: position });
+          infoWindow.open(map, marker);
+          // console.log("clicked!")
+        // });
+
+      // })(i)
+
+    }
+    map.fitBounds(bounds);       //# auto-zoom
+    map.panToBounds(bounds);     // # auto-center
+
+    // listen for a click and run function addMarker on a click:
+    google.maps.event.addListener(map, 'click',
+      function (event) {
+        console.log("clicked")
+        addMarker({ coords: event.latLng });
+        console.log(event.latLng)
+      });
+
+    function addMarker(props) {
+      var marker = new google.maps.Marker({
+        position: props.coords,
+        map: map,
+      });
+      var infoWindow = new google.maps.InfoWindow({ content: "blah", position: props.coords });
+      marker.addListener('click', function () {
+        infoWindow.open(map, marker);
+      })
+
+    }
+
   }
-
-  initMap();
-
 
   function createMapElement(obj) {
     let mapId = obj.id;
     let mapTitle = obj.title;
     let mapCity = obj.city;
 
-    mapElement = (`
-    <article class="map_element" data-mapID="${escape(mapId)}">
-      <span class="map_element_title"> ${escape(mapTitle)} </span>
-      <span class="map_element_city"> ${escape(mapCity)} </span>
+    let mapElement = (`
+    <article class="map_element" data-mapid="${mapId}">
+      <span class="map_element_title"> ${mapTitle} </span>
+      <span class="map_element_city"> ${mapCity} </span>
     </article>
     `)
     return mapElement;
@@ -57,36 +115,21 @@ $(document).ready(function () {
 
   //create and render location elements (specific map page) and markers
 
-  $(document).on('click', ".map_element", function () {
+  $('.element_container').on('click', ".map_element", function (event) {
     $('.element_container').empty(); // if needed
     $('.sidebar_back').css("display", "block")
-    let mapID = $(this).data("mapID")
+    console.log(event.target);
+    let mapID = $(event.target).closest('article').data("mapid");
+    console.log(mapID);
     $.ajax({
       method: "GET",
       url: "/maps/search/" + mapID,// locations/points page
-      success: function () {
-        renderLocationElements();
-        renderMarkers();
+      success: function (map) {
+        console.log(map);
+        initMap(map);
       }
     })
   })
-
-
-  function createMarker(coords) {
-    marker = new google.maps.Marker({
-      position: coords,
-      map: map
-    });
-  }
-
-  function renderMarkers(obj) {
-    for (coords of obj.markers) {
-      createMarker(coords) // create a new marker
-      loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng()); // based on the newly created marker, extend the "bounds"
-      bounds.extend(loc);
-    }
-    map.fitBounds(bounds);
-  }
 
 
 
@@ -98,7 +141,7 @@ $(document).ready(function () {
 
     pointElement = (`
       <article class="point_element" data-pointID="${escape(point_Id)}">
-      <img class="location_pic" src="/images/location.png">
+      <img class="location_pic" src="">
       <span class="point_element_description"> ${escape(point_label)} </span>
       </article>
     `);
@@ -107,6 +150,7 @@ $(document).ready(function () {
 
 
   function renderLocationElements(obj) {
+    console.log(obj);
     let mapTitle = obj.title;
     let mapHeader = (`
       <h1 class="sidebar_title">${escape(mapTitle)}</h1>
