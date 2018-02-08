@@ -54,20 +54,28 @@ h1 {
 }
 
 .detail_image {
-    // float: right;
+    // float: right; //keep until final
     margin-top: 200px;
     width: 100%;
 }
 
 .panel_content {
-    // float:right;
+    // float:right; //keep until final
     font-size: 16px;
     padding: 30px 50px 30px 50px;
 }
 
 .point_element {
     border: 1.5px solid lightgrey;
+    margin: 20px 40px 20px 40px;
+    font-size: 20px;
+    padding: 20px;
 }
 
-
+.map_element {
+    border: 1.5px solid lightgrey;
+    margin: 20px 40px 20px 40px;
+    font-size: 20px;
+    padding: 20px;
+}
 
