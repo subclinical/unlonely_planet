@@ -1,6 +1,6 @@
 node_modules/
-public/styles
-public/scripts
+public/styles/
+public/scripts/
 .env
 *.log
 *.sqlite3

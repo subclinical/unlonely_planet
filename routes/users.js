@@ -16,7 +16,10 @@ module.exports = (knex) => {
 
   //register new user
   router.post('/register', (req, res) => {
-    let signUp = false;
+    if(!req.body.name) {
+      res.status(400).send();
+      return;
+    }
     knex
       .select('*')
       .from('users')
@@ -41,28 +44,25 @@ module.exports = (knex) => {
               console.log(req.session.user_key);
               res.status(200).send("");
             });
-          // signUp = true;
         }
       })
-    // .then(() => { 
-    //   if(signUp) {
-    //   } else {
-    //     res.status(500).send();
-    //   }
-    // })
   });
 
   //login post route
   router.post('/login', (req, res) => {
+    if(!req.body.name || !req.body.password) {
+      res.status(400).send();
+      return;
+    }
     knex
-      .select('user_key')
+      .select('*')
       .from('users')
       .where('name', req.body.name)
       .andWhere('password', req.body.password)
       .then((match) => {
         if(match) {
-          req.session.user_key = match;
-          console.log(req.session.user_key);
+          req.session.user_key = match.user_key;
+          console.log(match);
           res.json(match);
         } else {
           res.status(404).send('User not found.');
