@@ -5,8 +5,18 @@ const router  = express.Router();
 
 module.exports = (knex) => {
 
-    //routes get requests to render map via map_id and all associated markers
+    //home page redirects here
     router.get('/', (req, res) => {
+        knex
+            .select('*')
+            .from('maps')
+            .then((map_info) => {
+                console.log('New visitor.');
+                res.json(map_info);
+            })
+    });
+    //routes get requests to render map via map_id and all associated markers
+    router.get('/search', (req, res) => {
         knex
             .select('*')
             .from('maps')
@@ -25,14 +35,6 @@ module.exports = (knex) => {
                         res.json(map_info[0]);
                     })
             });
-        // knex
-        //   .select('*')
-        //   .from('maps')
-        //   .innerJoin('markers', 'maps.id', 'markers.map_id')
-        //   .where('maps.id', req.body.map_id)
-        //   .then((info) => {
-        //     console.log(info);
-        //   });
     });
 
     //routes get requests for new map showing 
