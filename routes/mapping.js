@@ -16,11 +16,16 @@ module.exports = (knex) => {
             })
     });
     //routes get requests to render map via map_id and all associated markers
-    router.get('/search', (req, res) => {
+    router.get('/search/:id', (req, res) => {
+        console.log(req.params.id);
+        let one = 1;
+        if(!req.params.id) {
+            throw new Error();
+        } else {
         knex
             .select('*')
             .from('maps')
-            .where('id', req.body.map_id)
+            .where('id', req.params.id)
             .then((map_info) => {
                 return map_info;
             })
@@ -28,13 +33,14 @@ module.exports = (knex) => {
                 knex
                     .select('*')
                     .from('markers')
-                    .where('map_id', req.body.map_id)
+                    .where('map_id', req.params.id)
                     .then((marker_info) => {
                         map_info[0].markers = marker_info;
                         console.log(marker_info);
                         res.json(map_info[0]);
                     })
             });
+        }
     });
 
     //routes get requests for new map showing 
