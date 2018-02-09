@@ -48,7 +48,7 @@ module.exports = (knex) => {
       })
   });
 
-  //login post route
+  //login post route returns object containing properties user, maps, and favourites
   router.post('/login', (req, res) => {
     if(!req.body.name || !req.body.password) {
       res.status(400).send();
@@ -60,14 +60,52 @@ module.exports = (knex) => {
       .where('name', req.body.name)
       .andWhere('password', req.body.password)
       .then((match) => {
-        if(match) {
-          req.session.user_key = match.user_key;
-          console.log(match);
-          res.json(match);
+        if(match[0]) {
+          req.session.user_key = match[0].user_key;
+          let profile = {};
+          profile.user = match[0].name;
+          knex
+            .select('*')
+            .from('maps')
+            .where('user_key', match[0].user_key)
+            .then((maps) => {
+              profile.maps = maps;
+              return profile;
+            })
+            .then((profile) => {
+              knex
+                .select('map_id')
+                .from('favourites')
+                .where('user_key', req.session.user_key)
+                .then((map_ids) => {
+                  let ids = [];
+                  for(let map of map_ids) {
+                    for(let id in map) {
+                      ids.push(map[id]);
+                    }
+                  }
+                  console.log(map_ids);
+                  knex
+                    .select('*')
+                    .from('maps')
+                    .whereIn('id', ids)
+                    .then((faves) => {
+                      profile.favourites = faves;
+                      console.log(profile);
+                      res.json(profile);
+                    })
+                })
+            })
         } else {
           res.status(404).send('User not found.');
         }
       })
+  });
+
+  //logout route + deletes session
+  router.post('/logout', (req, res) => {
+    req.session = null;
+    res.status(200).send();
   });
 
 
