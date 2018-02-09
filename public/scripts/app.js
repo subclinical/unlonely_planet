@@ -2,7 +2,7 @@ $(document).ready(function () {
   $.ajax({
     url: '/maps',
     method: 'GET',
-    success: function(maps) {
+    success: function (maps) {
       initialRender();
       renderMapElements(maps);
     }
@@ -205,6 +205,17 @@ $(document).ready(function () {
   $(".create_map").on('click', function () {
     $('.element_container').empty();
 
+    let map_form = (`
+      <form>
+      <textarea name="map_name" placeholder="Map Name"></textarea>
+      <textarea name="map_location" placeholder="Map Location"></textarea>
+      <input class="save_map" type="submit" value="Save">
+      <input class="cancel_map" type="submit" value="Cancel">
+      </form>
+      `)
+
+$(".element_container").append(map_form);
+
   })
 
   // create new map link, on click,
@@ -217,7 +228,8 @@ $(document).ready(function () {
 
 
   //cancel button  //clear container, show list of maps page
-  $(".sidebar_back").on('click', function() {
+  $(".cancel_map").on('click', function (event) {
+    event.preventDefault();
     $('.element_container').empty(); // if needed
     $.ajax({
       method: "GET",
@@ -231,8 +243,8 @@ $(document).ready(function () {
 
 
 
-  //when add marker, display sidebar form
-  $("#map").on('click', function() {
+  //when add marker (only when on create map page), display sidebar form
+  $("#map").on('click', function () {
     $('.element_container').empty(); // if needed
   })
 
