@@ -239,7 +239,7 @@ $(document).ready(function () {
     console.log("create map clicked")
     $(this).css("display", "none");
     $('.element_container').empty();
-    initMap();
+ 
 
     let map_form = (`
       <form>
@@ -268,6 +268,7 @@ $(document).ready(function () {
       //   // data: $(this).serialize(),
       //   // success: initMap(map)
       // })
+      initMap();
       $(".element_container").empty();
 
       let marker_form = (`
