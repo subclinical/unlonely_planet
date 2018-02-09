@@ -51,9 +51,6 @@ module.exports = (knex) => {
                 knex
                     .insert({
                         title: req.body.title,
-                        lat: req.body.lat,
-                        lng: req.body.lng,
-                        zoom: req.body.zoom,
                         user_key: req.session.user_key, //swap to session.id when ready
                         date_created: new Date()
                     }, ['*'])
@@ -75,6 +72,7 @@ module.exports = (knex) => {
                     .insert({
                         label: req.body.label,
                         map_id: req.body.map_id,
+                        city: req.body.city,
                         lat: req.body.lat,
                         lng: req.body.lng,
                         user_key: req.session.user_key, //swap to session.id when ready
