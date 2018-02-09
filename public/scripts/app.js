@@ -1,27 +1,30 @@
 $(document).ready(function () {
- $.ajax({
-   url: '/maps',
-   method: 'GET',
-   success: renderMapElements
- })
+  $.ajax({
+    url: '/maps',
+    method: 'GET',
+    success: function(maps) {
+      initialRender();
+      renderMapElements(maps);
+    }
+  })
 
   // on mouseover, display marker's infoWindow 
   // on mouseleave, hide marker's infoWindow
 
-  
+
 
   //on document.load, create and render map elements (home page), there should be no markers
   //header should show "Explore your world", back button should be hidden
 
-  var map;
-  bounds = new google.maps.LatLngBounds();
+  // var map;
+  // bounds = new google.maps.LatLngBounds();
 
-  // function initMap() {
-  //   map = new google.maps.Map(document.getElementById('map'), {
-  //     center: { lat: 51.5074, lng: -0.1278 },
-  //     zoom: 8
-  //   });
-  // }
+  function initialRender() {
+    let map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: 51.5074, lng: -0.1278 },
+      zoom: 8
+    });
+  }
 
   // initMap();
 
@@ -41,20 +44,20 @@ $(document).ready(function () {
 
       // (function (i) {
 
-        var position = new google.maps.LatLng(maps.markers[i].lat, maps.markers[i].lng);
-        bounds.extend(position);
+      var position = new google.maps.LatLng(maps.markers[i].lat, maps.markers[i].lng);
+      bounds.extend(position);
 
-        var marker = new google.maps.Marker({
-          position: position,
-          map: map,
-        });
+      var marker = new google.maps.Marker({
+        position: position,
+        map: map,
+      });
 
-        // marker.addListener('click', function () {
-          // console.log(position.lat)
-          var infoWindow = new google.maps.InfoWindow({ content: maps.markers[i].description, position: position });
-          infoWindow.open(map, marker);
-          // console.log("clicked!")
-        // });
+      // marker.addListener('click', function () {
+      // console.log(position.lat)
+      var infoWindow = new google.maps.InfoWindow({ content: maps.markers[i].description, position: position });
+      infoWindow.open(map, marker);
+      // console.log("clicked!")
+      // });
 
       // })(i)
 
@@ -112,7 +115,6 @@ $(document).ready(function () {
 
 
 
-
   //create and render location elements (specific map page) and markers
 
   $('.element_container').on('click', ".map_element", function (event) {
@@ -156,12 +158,11 @@ $(document).ready(function () {
       <h1 class="sidebar_title">${escape(mapTitle)}</h1>
     `)
     $(".sidebar_header").append(mapHeader);
-    
+
     for (point of obj.markers) { // point is an object within an array
       $(".element_container").append(createLocationElement(point));
     }
   }
-
 
 
 
@@ -177,8 +178,6 @@ $(document).ready(function () {
       success: renderLocationDetails
     })
   })
-
-
 
 
 
@@ -198,6 +197,46 @@ $(document).ready(function () {
     $(".sidebar_header").append(locationHeader);
     $(".panel_content").append(locationContent);
   };
+
+
+
+
+  //add new map
+  $(".create_map").on('click', function () {
+    $('.element_container').empty();
+
+  })
+
+  // create new map link, on click,
+  //   clear container
+  // append html form
+  // save button, cancel button
+
+
+  //save button
+
+
+  //cancel button  //clear container, show list of maps page
+  $(".sidebar_back").on('click', function() {
+    $('.element_container').empty(); // if needed
+    $.ajax({
+      method: "GET",
+      url: "/maps", // maps page
+      success: function (map) {
+        initMap(map); //display world view with list of available maps
+      }
+    })
+  })
+
+
+
+
+  //when add marker, display sidebar form
+  $("#map").on('click', function() {
+    $('.element_container').empty(); // if needed
+  })
+
+
 })
 
 
