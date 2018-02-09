@@ -20,7 +20,7 @@
 
     <!-- App JS -->
     <!-- <script>
-        var map; 
+        var map;
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: 51.5074, lng: -0.1278 },
@@ -29,7 +29,7 @@
         }
     </script> -->
 
-    <script type="text/javascript" src="/scripts/app.js"></script>
+    <script type="text/javascript" src="../scripts/app.js"></script>
 
 
     <!-- Font awesome icons -->
@@ -49,6 +49,24 @@
             <a href="/points" <i class="fas fa-chevron-left"> Back </a>
         </header>
         <header class="sidebar_header">
+         <form>
+        <div>
+        <label for="name">My Map Name:</label>
+        <input type="text" id="name" name="user_name">
+        </div>
+        <div>
+        <label for="name">My Location latLng:</label>
+        <input type="text" id="location" name="latLng">
+        <input type="hidden" name="action" value="savepoint" id="action">
+        </div>
+        <div>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea>
+        </div>
+        <div class="button">
+        <button class="save_marker" type="submit">Save Submit my Map</button>
+        </div>
+        </form>
             <!-- <h1 class="sidebar_title">Explore Your World</h1> -->
         </header>
 
@@ -58,6 +76,7 @@
             </div>
 
             <div class="element_container">
+
 
                 <!-- <article class="point_element">
 <img class="location_pic" src="/images/location.png">

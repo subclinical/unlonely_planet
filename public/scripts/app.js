@@ -1,32 +1,47 @@
+$(document).ready(function () {
+  $.ajax({
+    url: '/maps',
+    method: 'GET',
+    success: function (maps) {
+      // console.log(maps);
+      initialRender();
+      // initMap(maps);
+      renderMapElements(maps);
+    }
+  })
+
+  // on mouseover, display marker's infoWindow
+  // on mouseleave, hide marker's infoWindow
 
 
- var maps = {
-    markers: [
-      {
-        lat: 43.648239,
-        lng: -79.395851,
-        description: "this is a test description"
-        },
-      {
-        lat: 46.618487,
-        lng: -79.534538,
-        description: "b"
-      },
-      {
-        lat: 50.120578,
-        lng: -122.957455,
-        description: "c"
-      }
-    ]
-  };
 
+  //on document.load, create and render map elements (home page), there should be no markers
+  //header should show "Explore your world", back button should be hidden
 
-  function initMap() {
-    mylatLng = { lat: maps.markers[0].lat, lng: maps.markers[0].lng }
+  // var map;
+  // bounds = new google.maps.LatLngBounds();
+
+// dont need this -
+  function initialRender(maps) {
+    let map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: 51.5074, lng: -0.1278 },
+      zoom: 8
+    });
+  }
+
+  // initMap();
+
+// ***** BEGINNING OF LARGE FUNCTION
+
+  function initMap(maps) {
+    mylatLng = { lat: 0, lng: 0 }
 
     var mapOptions = {
-      center: mylatLng // this is from mapID
+      center: mylatLng, // this is from mapID
+      zoom:2
     }
+
+    var newMarker;
 
     var bounds = new google.maps.LatLngBounds();
 
@@ -36,20 +51,20 @@
 
       (function (i) {
 
-        var position = new google.maps.LatLng(maps.markers[i].lat, maps.markers[i].lng);
-        bounds.extend(position);
+      var position = new google.maps.LatLng(maps.markers[i].lat, maps.markers[i].lng);
+      bounds.extend(position);
 
-        var marker = new google.maps.Marker({
-          position: position,
-          map: map,
-        });
+      var marker = new google.maps.Marker({
+        position: position,
+        map: map,
+      });
 
-        marker.addListener('click', function () {
-          console.log(position.lat)
-          var infoWindow = new google.maps.InfoWindow({ content: maps.markers[i].description, position: position });
-          infoWindow.open(map, marker);
-          console.log("clicked!")
-        });
+      marker.addListener('click', function () {
+      console.log(position.lat)
+      var infoWindow = new google.maps.InfoWindow({ content: maps.markers[i].description, position: position });
+      infoWindow.open(map, marker);
+      console.log("clicked!")
+      });
 
       })(i)
 
@@ -58,26 +73,40 @@
     map.panToBounds(bounds);     // # auto-center
 
     // listen for a click and run function addMarker on a click:
-    google.maps.event.addListener(map, 'click',
-      function (event) {
-        console.log("clicked")
-        addMarker({ coords: event.latLng });
-        console.log(event.latLng)
-      });
+    google.maps.event.addListener(map, 'click', function (event) {
+      if (newMarker) {
+        newMarker.setMap(null)
+      }
+      newMarker = addMarker({ coords: event.latLng });
+      $("#location").val(event.latLng);
+    });
+
+    $(".save_marker").on('click', function (event) {
+      console.log("save marker button clicked")
+      event.preventDefault();
+      // addMarker(newMarker.coords);
+      var savedMarker = newMarker;
+      newMarker = null;
+    });
+
+
+
 
     function addMarker(props) {
-      var marker = new google.maps.Marker({
+      marker = new google.maps.Marker({
         position: props.coords,
         map: map,
       });
       var infoWindow = new google.maps.InfoWindow({ content: "blah", position: props.coords });
       marker.addListener('click', function () {
-        infoWindow.open(map, marker);
+        infoWindow.open(map, markers);
       })
-
+      return marker;
     }
 
   }
+
+  // **** END OF LARGE FUNCTION ****
 
   function createMapElement(obj) {
     let mapId = obj.id;
@@ -107,7 +136,6 @@
 
 
 
-
   //create and render location elements (specific map page) and markers
 
   $('.element_container').on('click', ".map_element", function (event) {
@@ -119,9 +147,9 @@
     $.ajax({
       method: "GET",
       url: "/maps/search/" + mapID,// locations/points page
-      success: function (map) {
-        console.log(map);
-        initMap(map);
+      success: function (maps) {
+        console.log(maps);
+        initMap(maps);
       }
     })
   })
@@ -159,7 +187,6 @@
 
 
 
-
   //create and render location details (specific location page)
 
   $(document).on('click', ".location_element", function () {
@@ -172,8 +199,6 @@
       success: renderLocationDetails
     })
   })
-
-
 
 
 
@@ -197,11 +222,72 @@
 
 
 
+  //add new map
+  $(".create_map").on('click', function () {
+    $('.element_container').empty();
+
+    let map_form = (`
+      <form>
+        <div>
+        <label for="name">My Map Name:</label>
+        <input type="text" id="name" name="user_name">
+        </div>
+        <div>
+        <label for="name">My Location latLng:</label>
+        <input type="text" id="location" name="latLng">
+        </div>
+        <div>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea>
+        </div>
+        <div class="button">
+        <button type="submit">Save Submit my Map</button>
+        </div>
+        </form>
+      `)
+
+$(".element_container").append(map_form);
+
+  })
+
+  // create new map link, on click,
+  //   clear container
+  // append html form
+  // save button, cancel button
+
+
+  //save button
+
+
+  //cancel button  //clear container, show list of maps page
+  $(".cancel_map").on('click', function (event) {
+    event.preventDefault();
+    $('.element_container').empty(); // if needed
+    $.ajax({
+      method: "GET",
+      url: "/maps", // maps page
+      success: function (map) {
+        initMap(map); //display world view with list of available maps
+      }
+    })
+  })
+
+
+
+
+  //when add marker (only when on create map page), display sidebar form
+  $("#map").on('click', function () {
+    $('.element_container').empty(); // if needed
+  })
+
+
+})
+
+
+
 
 function escape(str) {
   var div = document.createElement('div');
   div.appendChild(document.createTextNode(str));
   return div.innerHTML;
 }
-
-
