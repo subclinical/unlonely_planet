@@ -16,48 +16,48 @@ $(document).ready(function () {
 
   // on mouseover, display marker's infoWindow 
   // on mouseleave, hide marker's infoWindow
-$('.reg').on('click', function(event) {
-  $.ajax({
-    url: '/api/users/register',
-    method: 'POST',
-    data: {
-      name: 'banjo',
-      password: '1234',
-      success: function() {
-        console.log('User registered.');
+  $('.reg').on('click', function (event) {
+    $.ajax({
+      url: '/api/users/register',
+      method: 'POST',
+      data: {
+        name: 'banjo',
+        password: '1234',
+        success: function () {
+          console.log('User registered.');
+        }
       }
-    }
-  })
-});
-  
-$('.login').on('click', function(event) {
-  event.preventDefault();
-  $.ajax({
-    url: '/api/users/login',
-    method: 'POST',
-    data: {
-      name: $('.username').val(),
-      password: $('.password').val()
-    },
-    success: function(profile) {
-      if(!$('#custom').val()) {
-        $('.sidebar_header').append(`<h1 id='custom'>Welcome, ${profile.user}.</h1>`);
-      } else {
-        $('#custom').css('display', 'inline');
-      }
-   },
-  })
-});
+    })
+  });
 
-$('.logout').on('click', function(event) {
-  $.ajax({
-    url: '/api/users/logout',
-    method: 'POST',
-    success: function() {
-      $('#custom').css('display', 'none');
-    }
-  })
-});
+  $('.login').on('click', function (event) {
+    event.preventDefault();
+    $.ajax({
+      url: '/api/users/login',
+      method: 'POST',
+      data: {
+        name: $('.username').val(),
+        password: $('.password').val()
+      },
+      success: function (profile) {
+        if (!$('#custom').val()) {
+          $('.sidebar_header').append(`<h1 id='custom'>Welcome, ${profile.user}.</h1>`);
+        } else {
+          $('#custom').css('display', 'inline');
+        }
+      },
+    })
+  });
+
+  $('.logout').on('click', function (event) {
+    $.ajax({
+      url: '/api/users/logout',
+      method: 'POST',
+      success: function () {
+        $('#custom').css('display', 'none');
+      }
+    })
+  });
 
 
   //on document.load, create and render map elements (home page), there should be no markers
@@ -69,7 +69,7 @@ $('.logout').on('click', function(event) {
 
   function initialRender() {
     let map = new google.maps.Map(document.getElementById('map'), {
-      center: { lat: 51.5074, lng: -0.1278 },
+      center: { lat: 0, lng: 0 },
       zoom: 2
     });
   }
@@ -113,11 +113,8 @@ $('.logout').on('click', function(event) {
 
 
   function initMap() {
-    mylatLng = { lat: 51.5, lng: -0.1 }
-
-
     var mapOptions = {
-      center: mylatLng, // this is from mapID
+      center: { lat: 0, lng: 0 }, // this is from mapID
       zoom: 2
     }
 
@@ -126,8 +123,8 @@ $('.logout').on('click', function(event) {
 
     var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-    map.fitBounds(bounds);       //# auto-zoom
-    map.panToBounds(bounds);     // # auto-center
+    // map.fitBounds(bounds);       //# auto-zoom
+    // map.panToBounds(bounds);     // # auto-center
 
     // listen for a click and run function addMarker on a click:
 
@@ -137,7 +134,8 @@ $('.logout').on('click', function(event) {
       };
 
       newMarker = addMarker({ coords: event.latLng });
-      $(".marker_coords").val(event.latLng);
+      $(".marker_lat").val(event.latLng.lat);
+      $(".marker_lng").val(event.latLng.lng);
 
     });
 
@@ -288,7 +286,7 @@ $('.logout').on('click', function(event) {
     console.log("create map clicked")
     $(this).css("display", "none");
     $('.element_container').empty();
- 
+
 
     let map_form = (`
       <form>
@@ -308,25 +306,27 @@ $('.logout').on('click', function(event) {
   $(".element_container").on('click', ".save_map", function (event) {
     console.log("clicked save_map")
     event.preventDefault();
-    if ($("textarea").val().length === 0) {
+    console.log($(".map_name").val())
+    if ($(".map_name").val().length === 0) {
       alert("Please Enter Map Name")
     } else {
       $.ajax({
         method: "POST",
         url: "/new",
-        data: {title: $("textarea .map_name").val()}
-        // success: initMap(map)
+        data: { title: $(".map_name").val() },
+        // success: initMap
       })
       initMap();
       $(".element_container").empty();
 
       let marker_form = (`
       <form>
-      <textarea name="marker_name" placeholder="Marker Name"></textarea>
-      <textarea name="marker_details" placeholder="Marker City/Country"></textarea>
-      <textarea name="marker_image" placeholder="Marker Image URL"></textarea>
-      <textarea name="marker_description" placeholder="Marker Description"></textarea>
-      <textarea class="marker_coords" name="marker_coords" placeholder="Marker Coords (to be hidden"></textarea>
+      <textarea class="marker_name" name="marker_name" placeholder="Marker Name"></textarea>
+      <textarea class="marker_details"name="marker_details" placeholder="Marker City/Country"></textarea>
+      <textarea class="marker_image"name="marker_image" placeholder="Marker Image URL"></textarea>
+      <textarea class="marker_description" name="marker_description" placeholder="Marker Description"></textarea>
+      <textarea class="marker_lat" name="marker_lat" placeholder="Marker Lat (to be hidden"></textarea>
+      <textarea class="marker_lng" name="marker_lng" placeholder="Marker Lng (to be hidden"></textarea>
       <input class="save_marker" type="submit" value="Save">
       <input class="cancel_map" type="submit" value="Cancel">
       </form>
@@ -351,36 +351,37 @@ $('.logout').on('click', function(event) {
   })
 
 
-  // $(".save_marker").on('click', function (event) {
-  //   event.preventDefault();
-  //   $.ajax({
-  //     method: "POST",
-  //     url: "/maps",
-  // success: 
-  // })
-  //clear marker form
-  //save marker on the map
-  // })
+  $(".save_marker").on('click', function (event) {
+    event.preventDefault();
+    $.ajax({
+      method: "POST",
+      url: "/marker",
+      data: {
+        label: $(".marker_name").val(),
+        city: $(".marker_details").val(),
+        image: $(".marker_image").val(),
+        description: $(".marker_description").val(),
+        lat: $(".marker_lat").val(),
+        lng: $(".marker_lng").val(),
+      }
+      
+      // success: 
+  })
+    //clear marker form
+    //save marker on the map
+    })
 
 
 
 
-
-
-  //when add marker (only when on create map page), display sidebar form
-  // $("#map").on('click', function () {
-  //   $('.element_container').empty(); // if needed
-  // })
-
-
-})
+  })
 
 
 
 
-function escape(str) {
-  var div = document.createElement('div');
-  div.appendChild(document.createTextNode(str));
-  return div.innerHTML;
-}
+  function escape(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
 
