@@ -53,8 +53,8 @@ exports.seed = function(knex, Promise) {
         knex('maps').insert({
           id: 4,
           title: 'Everybody loves Vancouver',
-          lat: 49.282808,
-          lng: -123.106688,
+          lat: 0,
+          lng: 0,
           zoom: 8,
           user_key: '012345',
           date_created: new Date(),

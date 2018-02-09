@@ -19,7 +19,6 @@ module.exports = (knex) => {
     //routes get requests to render map via map_id and all associated markers
     router.get('/search/:id', (req, res) => {
         console.log(req.params.id);
-        let one = 1;
         if(!req.params.id) {
             throw new Error();
         } else {
