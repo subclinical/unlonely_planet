@@ -68,9 +68,9 @@ $(document).ready(function () {
     // listen for a click and run function addMarker on a click:
     google.maps.event.addListener(map, 'click',
       function (event) {
-        console.log("clicked")
+        // console.log("clicked")
         addMarker({ coords: event.latLng });
-        console.log(event.latLng)
+        // console.log(event.latLng)
       });
 
     function addMarker(props) {
@@ -107,6 +107,7 @@ $(document).ready(function () {
     `)
     $(".sidebar_header").append(mapHeader);
     for (map of array) { // point is an object within an array
+      console.log(map)
       $(".element_container").append(createMapElement(map));
     }
   }
@@ -120,15 +121,16 @@ $(document).ready(function () {
   $('.element_container').on('click', ".map_element", function (event) {
     $('.element_container').empty(); // if needed
     $('.sidebar_back').css("display", "block")
-    console.log(event.target);
+    // console.log(event.target);
     let mapID = $(event.target).closest('article').data("mapid");
-    console.log(mapID);
+    // console.log(mapID);
     $.ajax({
       method: "GET",
       url: "/maps/search/" + mapID,// locations/points page
       success: function (map) {
-        console.log(map);
+        // console.log(map);
         initMap(map);
+        renderLocationElements(map);
       }
     })
   })
@@ -160,6 +162,7 @@ $(document).ready(function () {
     $(".sidebar_header").append(mapHeader);
 
     for (point of obj.markers) { // point is an object within an array
+      // console.log(point)
       $(".element_container").append(createLocationElement(point));
     }
   }
@@ -203,50 +206,88 @@ $(document).ready(function () {
 
   //add new map
   $(".create_map").on('click', function () {
+    console.log("create map clicked")
     $('.element_container').empty();
 
     let map_form = (`
       <form>
       <textarea name="map_name" placeholder="Map Name"></textarea>
       <textarea name="map_location" placeholder="Map Location"></textarea>
-      <input class="save_map" type="submit" value="Save">
-      <input class="cancel_map" type="submit" value="Cancel">
+      <input class="save_map" type="button" value="Next">
+      <input class="cancel_map" type="button" value="Cancel">
       </form>
       `)
 
-$(".element_container").append(map_form);
+    $(".element_container").append(map_form);
 
   })
 
-  // create new map link, on click,
-  //   clear container
-  // append html form
-  // save button, cancel button
 
-
-  //save button
-
-
-  //cancel button  //clear container, show list of maps page
-  $(".cancel_map").on('click', function (event) {
+  //save map button //user will only be able to create 1 marker at a time until they click the save marker button
+  $(".element_container").on('click', ".save_map", function (event) {
+    console.log("clicked save_map")
     event.preventDefault();
-    $('.element_container').empty(); // if needed
-    $.ajax({
-      method: "GET",
-      url: "/maps", // maps page
-      success: function (map) {
-        initMap(map); //display world view with list of available maps
-      }
-    })
+    if ($("textarea").val().length === 0) {
+      alert("Please Enter Map Name")
+    } else {
+      // $.ajax({
+      //   method: "POST",
+      //   url: "/maps",
+      //   // data: $(this).serialize(),
+      //   // success: initMap(map)
+      // })
+      $(".element_container").empty();
+
+      let marker_form = (`
+      <form>
+      <textarea name="marker_name" placeholder="Marker Name"></textarea>
+      <textarea name="marker_location" placeholder="Marker Location"></textarea>
+      <textarea name="marker_image" placeholder="Marker Image URL"></textarea>
+      <textarea name="marker_coords" placeholder="Marker Coords (to be hidden"></textarea>
+      <input class="save_marker" type="submit" value="Save">
+      <input class="cancel_map" type="submit" value="Cancel">
+      </form>
+      `)
+      $(".element_container").append(marker_form);
+    }
   })
+
+
+  // cancel button  //clear container, show list of maps page
+  $("form").on('click', '.cancel_map', function (event) {
+    event.preventDefault();
+    console.log("cancel map clicked")
+    // $('.element_container').empty(); // if needed
+    // $.ajax({
+    //   method: "GET",
+    //   url: "/maps", // maps page
+    //   success: function (map) {
+    //     initMap(map); //display world view with list of available maps
+    //   }
+    // })
+  })
+
+
+  // $(".save_marker").on('click', function (event) {
+  //   event.preventDefault();
+  //   $.ajax({
+  //     method: "POST",
+  //     url: "/maps",
+  // success: 
+  // })
+  //clear marker form
+  //save marker on the map
+  // })
+
+
 
 
 
 
   //when add marker (only when on create map page), display sidebar form
-  $("#map").on('click', function () {
-    $('.element_container').empty(); // if needed
-  })
+  // $("#map").on('click', function () {
+  //   $('.element_container').empty(); // if needed
+  // })
 
 
 })
