@@ -8,7 +8,7 @@ const express     = require("express");
 const bodyParser  = require("body-parser");
 const sass        = require("node-sass-middleware");
 const app         = express();
-
+const cookieSession = require("cookie-session");
 const knexConfig  = require("./knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
 const morgan      = require('morgan');
@@ -16,6 +16,8 @@ const knexLogger  = require('knex-logger');
 
 // Seperated Routes for each Resource
 const usersRoutes = require("./routes/users");
+// Routes related to map manipulation
+const mapRoutes = require("./routes/mapping");
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -33,6 +35,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //   debug: true,
 //   outputStyle: 'expanded'
 // }));
+app.use(cookieSession({
+  name: 'session',
+  keys: ["key1", "key2"],
+
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
 
 app.use(sass({
   src: './styles',
@@ -46,6 +55,7 @@ app.use(express.static("public"));
 // Mount all resource routes
 app.use("/api/users", usersRoutes(knex));
 
+app.use("/maps", mapRoutes(knex));
 
 
 

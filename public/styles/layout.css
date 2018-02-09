@@ -1,0 +1,82 @@
+html {
+  height: 100%;
+}
+
+body {
+  background-color: #EEE;
+  height: 100%;
+}
+
+h1 {
+  color: #244751;
+}
+
+#map {
+  height: 100%;
+  width: 65%;
+  float: left;
+}
+
+.sidebar {
+  z-index: 1;
+  background-color: white;
+  height: 100vh;
+  width: 35%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  float: right;
+}
+
+.sidebar_header {
+  background-color: #297cbb;
+  height: 180px;
+  width: 100%;
+  position: fixed;
+  padding: 20px 20px 10px;
+}
+
+.sidebar_title {
+  color: white;
+  font-weight: 500;
+  font-size: 46px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.back_button {
+  color: lightgrey;
+  font-weight: 300;
+  margin-left: 10px;
+}
+
+.detail_image {
+  margin-top: 200px;
+  width: 100%;
+}
+
+.panel_content {
+  font-size: 16px;
+  padding: 30px 50px 30px 50px;
+}
+
+.point_element {
+  border: 1.5px solid lightgrey;
+  margin: 20px 40px 20px 40px;
+  font-size: 20px;
+  padding: 20px;
+}
+
+.map_element {
+  border: 1.5px solid lightgrey;
+  margin: 20px 40px 20px 40px;
+  font-size: 20px;
+  padding: 20px;
+}
+
+.fa-chevron-left {
+  color: white;
+}
+
+.sidebar_back {
+  display: none;
+}
