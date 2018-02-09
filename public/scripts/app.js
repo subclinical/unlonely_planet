@@ -16,48 +16,48 @@ $(document).ready(function () {
 
   // on mouseover, display marker's infoWindow 
   // on mouseleave, hide marker's infoWindow
-$('.reg').on('click', function(event) {
-  $.ajax({
-    url: '/api/users/register',
-    method: 'POST',
-    data: {
-      name: 'banjo',
-      password: '1234',
-      success: function() {
-        console.log('User registered.');
+  $('.reg').on('click', function (event) {
+    $.ajax({
+      url: '/api/users/register',
+      method: 'POST',
+      data: {
+        name: 'banjo',
+        password: '1234',
+        success: function () {
+          console.log('User registered.');
+        }
       }
-    }
-  })
-});
-  
-$('.login').on('click', function(event) {
-  event.preventDefault();
-  $.ajax({
-    url: '/api/users/login',
-    method: 'POST',
-    data: {
-      name: $('.username').val(),
-      password: $('.password').val()
-    },
-    success: function(profile) {
-      if(!$('#custom').val()) {
-        $('.sidebar_header').append(`<h1 id='custom'>Welcome, ${profile.user}.</h1>`);
-      } else {
-        $('#custom').css('display', 'inline');
-      }
-   },
-  })
-});
+    })
+  });
 
-$('.logout').on('click', function(event) {
-  $.ajax({
-    url: '/api/users/logout',
-    method: 'POST',
-    success: function() {
-      $('#custom').css('display', 'none');
-    }
-  })
-});
+  $('.login').on('click', function (event) {
+    event.preventDefault();
+    $.ajax({
+      url: '/api/users/login',
+      method: 'POST',
+      data: {
+        name: $('.username').val(),
+        password: $('.password').val()
+      },
+      success: function (profile) {
+        if (!$('#custom').val()) {
+          $('.sidebar_header').append(`<h1 id='custom'>Welcome, ${profile.user}.</h1>`);
+        } else {
+          $('#custom').css('display', 'inline');
+        }
+      },
+    })
+  });
+
+  $('.logout').on('click', function (event) {
+    $.ajax({
+      url: '/api/users/logout',
+      method: 'POST',
+      success: function () {
+        $('#custom').css('display', 'none');
+      }
+    })
+  });
 
 
   //on document.load, create and render map elements (home page), there should be no markers
@@ -288,7 +288,7 @@ $('.logout').on('click', function(event) {
     console.log("create map clicked")
     $(this).css("display", "none");
     $('.element_container').empty();
- 
+
 
     let map_form = (`
       <form>
@@ -314,7 +314,7 @@ $('.logout').on('click', function(event) {
       $.ajax({
         method: "POST",
         url: "/new",
-        data: {title: $("textarea .map_name").val()}
+        data: { title: $("textarea .map_name").val() }
         // success: initMap(map)
       })
       initMap();

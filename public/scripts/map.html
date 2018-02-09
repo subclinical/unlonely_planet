@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <title>maps</title>
+
+
+      <style>
+        #map {
+          height: 400px;
+          width: 100%;
+        }
+      </style>
+
+      <script type="text/javascript" src="../vendor/jquery-3.0.0.js"></script>
+
+      <script type="text/javascript" src="testfile.js"></script>
+
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1dPRw0yLSfdiOZ1DrozH4iIFM1tPoOAw&callback=initMap"
+     async defer></script>
+
+  </head>
+
+  <body>
+
+    <h1> test file </h1>
+
+    <form action="/maps/new method="post">
+    <div>
+        <label for="name">My Map Name:</label>
+        <input type="text" id="name" name="user_name">
+    </div>
+    <div>
+        <label for="name">My Location latLng:</label>
+        <input type="text" id="location" name="latLng">
+    </div>
+    <div>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea>
+    </div>
+    <div class="button">
+        <button type="submit">Save Submit my Map</button>
+    </div>
+</form>
+    <br>
+
+    <div id="map"></div>
+
+  </body>
+
+</html>
