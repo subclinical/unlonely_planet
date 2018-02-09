@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
   $.ajax({
     url: '/maps',
     method: 'GET',
@@ -13,16 +14,63 @@ $(document).ready(function () {
 
 
 
+  // on mouseover, display marker's infoWindow 
+  // on mouseleave, hide marker's infoWindow
+$('.reg').on('click', function(event) {
+  $.ajax({
+    url: '/api/users/register',
+    method: 'POST',
+    data: {
+      name: 'banjo',
+      password: '1234',
+      success: function() {
+        console.log('User registered.');
+      }
+    }
+  })
+});
+  
+$('.login').on('click', function(event) {
+  event.preventDefault();
+  $.ajax({
+    url: '/api/users/login',
+    method: 'POST',
+    data: {
+      name: $('.username').val(),
+      password: $('.password').val()
+    },
+    success: function(profile) {
+      if(!$('#custom').val()) {
+        $('.sidebar_header').append(`<h1 id='custom'>Welcome, ${profile.user}.</h1>`);
+      } else {
+        $('#custom').css('display', 'inline');
+      }
+   },
+  })
+});
+
+$('.logout').on('click', function(event) {
+  $.ajax({
+    url: '/api/users/logout',
+    method: 'POST',
+    success: function() {
+      $('#custom').css('display', 'none');
+    }
+  })
+});
+
+
   //on document.load, create and render map elements (home page), there should be no markers
   //header should show "Explore your world", back button should be hidden
 
   // var map;
   // bounds = new google.maps.LatLngBounds();
 
+
   function initialRender() {
     let map = new google.maps.Map(document.getElementById('map'), {
       center: { lat: 51.5074, lng: -0.1278 },
-      zoom: 8
+      zoom: 2
     });
   }
 
@@ -51,6 +99,7 @@ $(document).ready(function () {
         });
 
         marker.addListener('click', function () {
+
           // console.log(position.lat)
           var infoWindow = new google.maps.InfoWindow({ content: maps.markers[i].description, position: position });
           infoWindow.open(map, marker);
@@ -243,7 +292,7 @@ $(document).ready(function () {
 
     let map_form = (`
       <form>
-      <textarea name="map_name" placeholder="Map Name"></textarea>
+      <textarea class="map_name" name="map_name" placeholder="Map Name"></textarea>
 
       <input class="save_map" type="button" value="Next">
       <input class="cancel_map" type="button" value="Cancel">
@@ -262,12 +311,12 @@ $(document).ready(function () {
     if ($("textarea").val().length === 0) {
       alert("Please Enter Map Name")
     } else {
-      // $.ajax({
-      //   method: "POST",
-      //   url: "/maps",
-      //   // data: $(this).serialize(),
-      //   // success: initMap(map)
-      // })
+      $.ajax({
+        method: "POST",
+        url: "/new",
+        data: {title: $("textarea .map_name").val()}
+        // success: initMap(map)
+      })
       initMap();
       $(".element_container").empty();
 
