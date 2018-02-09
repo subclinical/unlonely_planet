@@ -48,7 +48,7 @@ module.exports = (knex) => {
       })
   });
 
-  //login post route
+  //login post route returns object containing properties user, maps, and favourites
   router.post('/login', (req, res) => {
     if(!req.body.name || !req.body.password) {
       res.status(400).send();

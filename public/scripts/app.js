@@ -17,7 +17,10 @@ $('.reg').on('click', function(event) {
     method: 'POST',
     data: {
       name: 'banjo',
-      password: '1234'
+      password: '1234',
+      success: function() {
+        console.log('User registered.');
+      }
     }
   })
 });
