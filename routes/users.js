@@ -50,6 +50,7 @@ module.exports = (knex) => {
 
   //login post route
   router.post('/login', (req, res) => {
+    console.log(req.body);
     if(!req.body.name || !req.body.password) {
       res.status(400).send();
       return;
@@ -60,17 +61,14 @@ module.exports = (knex) => {
       .where('name', req.body.name)
       .andWhere('password', req.body.password)
       .then((match) => {
-        if(match) {
+        if(match[0]) {
           req.session.user_key = match.user_key;
-          console.log(match);
           res.json(match);
         } else {
           res.status(404).send('User not found.');
         }
       })
   });
-
-
   return router;
 }
 
