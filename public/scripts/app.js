@@ -26,10 +26,8 @@ $(document).ready(function () {
     });
   }
 
-  // initMap();
 
-
-  function initMap(maps) {
+  function initMapNoMarker(maps) {
     mylatLng = { lat: maps.markers[0].lat, lng: maps.markers[0].lng }
 
     var mapOptions = {
@@ -42,36 +40,64 @@ $(document).ready(function () {
 
     for (var i = 0; i < maps.markers.length; i++) {
 
-      // (function (i) {
+      (function (i) {
 
-      var position = new google.maps.LatLng(maps.markers[i].lat, maps.markers[i].lng);
-      bounds.extend(position);
+        var position = new google.maps.LatLng(maps.markers[i].lat, maps.markers[i].lng);
+        bounds.extend(position);
 
-      var marker = new google.maps.Marker({
-        position: position,
-        map: map,
-      });
+        var marker = new google.maps.Marker({
+          position: position,
+          map: map,
+        });
 
-      // marker.addListener('click', function () {
-      // console.log(position.lat)
-      var infoWindow = new google.maps.InfoWindow({ content: maps.markers[i].description, position: position });
-      infoWindow.open(map, marker);
-      // console.log("clicked!")
-      // });
-
-      // })(i)
-
+        marker.addListener('click', function () {
+          // console.log(position.lat)
+          var infoWindow = new google.maps.InfoWindow({ content: maps.markers[i].description, position: position });
+          infoWindow.open(map, marker);
+          // console.log("clicked!")
+        });
+      })(i)
     }
+    map.fitBounds(bounds);       //# auto-zoom
+    map.panToBounds(bounds);     // # auto-center
+  }
+
+
+  function initMap() {
+    mylatLng = { lat: 51.5, lng: -0.1 }
+
+
+    var mapOptions = {
+      center: mylatLng, // this is from mapID
+      zoom: 2
+    }
+
+    var newMarker;
+    var bounds = new google.maps.LatLngBounds();
+
+    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
     map.fitBounds(bounds);       //# auto-zoom
     map.panToBounds(bounds);     // # auto-center
 
     // listen for a click and run function addMarker on a click:
-    google.maps.event.addListener(map, 'click',
-      function (event) {
-        // console.log("clicked")
-        addMarker({ coords: event.latLng });
-        // console.log(event.latLng)
-      });
+
+    google.maps.event.addListener(map, 'click', function (event) {
+      if (newMarker) {
+        newMarker.setMap(null)
+      };
+
+      newMarker = addMarker({ coords: event.latLng });
+      $(".marker_coords").val(event.latLng);
+
+    });
+
+
+    $(".save_marker").on('click', function (event) {
+      event.preventDefault();
+      var savedMarker = newMarker
+      newMarker = null;
+    });
 
     function addMarker(props) {
       var marker = new google.maps.Marker({
@@ -82,10 +108,14 @@ $(document).ready(function () {
       marker.addListener('click', function () {
         infoWindow.open(map, marker);
       })
-
+      return marker;
     }
 
   }
+
+
+
+
 
   function createMapElement(obj) {
     let mapId = obj.id;
@@ -129,7 +159,7 @@ $(document).ready(function () {
       url: "/maps/search/" + mapID,// locations/points page
       success: function (map) {
         // console.log(map);
-        initMap(map);
+        initMapNoMarker(map);
         renderLocationElements(map);
       }
     })
@@ -207,12 +237,14 @@ $(document).ready(function () {
   //add new map
   $(".create_map").on('click', function () {
     console.log("create map clicked")
+    $(this).css("display", "none");
     $('.element_container').empty();
+    initMap();
 
     let map_form = (`
       <form>
       <textarea name="map_name" placeholder="Map Name"></textarea>
-      <textarea name="map_location" placeholder="Map Location"></textarea>
+
       <input class="save_map" type="button" value="Next">
       <input class="cancel_map" type="button" value="Cancel">
       </form>
@@ -241,9 +273,10 @@ $(document).ready(function () {
       let marker_form = (`
       <form>
       <textarea name="marker_name" placeholder="Marker Name"></textarea>
-      <textarea name="marker_location" placeholder="Marker Location"></textarea>
+      <textarea name="marker_details" placeholder="Marker City/Country"></textarea>
       <textarea name="marker_image" placeholder="Marker Image URL"></textarea>
-      <textarea name="marker_coords" placeholder="Marker Coords (to be hidden"></textarea>
+      <textarea name="marker_description" placeholder="Marker Description"></textarea>
+      <textarea class="marker_coords" name="marker_coords" placeholder="Marker Coords (to be hidden"></textarea>
       <input class="save_marker" type="submit" value="Save">
       <input class="cancel_map" type="submit" value="Cancel">
       </form>
