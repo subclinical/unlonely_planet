@@ -2,26 +2,67 @@ $(document).ready(function () {
  $.ajax({
    url: '/maps',
    method: 'GET',
-   success: renderMapElements
+   success: function(maps) {
+     console.log(maps);
+     renderMapElements(maps);
+     initialRender();
+   }
  })
 
   // on mouseover, display marker's infoWindow 
   // on mouseleave, hide marker's infoWindow
-
+$('.reg').on('click', function(event) {
+  $.ajax({
+    url: '/api/users/register',
+    method: 'POST',
+    data: {
+      name: 'banjo',
+      password: '1234'
+    }
+  })
+});
   
+$('.login').on('click', function(event) {
+  event.preventDefault();
+  $.ajax({
+    url: '/api/users/login',
+    method: 'POST',
+    data: {
+      name: $('.username').val(),
+      password: $('.password').val()
+    },
+    success: function(user) {
+      if(!$('#custom').val()) {
+        $('.sidebar_header').append(`<h1 id='custom'>Welcome, ${user.name}.</h1>`);
+      } else {
+        $('#custom').css('display', 'inline');
+      }
+   },
+  })
+});
+
+$('.logout').on('click', function(event) {
+  $.ajax({
+    url: '/api/users/logout',
+    method: 'POST',
+    success: function() {
+      $('#custom').css('display', 'none');
+    }
+  })
+});
 
   //on document.load, create and render map elements (home page), there should be no markers
   //header should show "Explore your world", back button should be hidden
 
-  var map;
-  bounds = new google.maps.LatLngBounds();
+  // var map;
+  // bounds = new google.maps.LatLngBounds();
 
-  // function initMap() {
-  //   map = new google.maps.Map(document.getElementById('map'), {
-  //     center: { lat: 51.5074, lng: -0.1278 },
-  //     zoom: 8
-  //   });
-  // }
+  function initialRender() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: 51.5074, lng: -0.1278 },
+      zoom: 2
+    });
+  }
 
   // initMap();
 
@@ -39,7 +80,7 @@ $(document).ready(function () {
 
     for (var i = 0; i < maps.markers.length; i++) {
 
-      // (function (i) {
+      (function (i) {
 
         var position = new google.maps.LatLng(maps.markers[i].lat, maps.markers[i].lng);
         bounds.extend(position);
@@ -49,14 +90,14 @@ $(document).ready(function () {
           map: map,
         });
 
-        // marker.addListener('click', function () {
-          // console.log(position.lat)
+        marker.addListener('click', function () {
+          console.log(position.lat)
           var infoWindow = new google.maps.InfoWindow({ content: maps.markers[i].description, position: position });
           infoWindow.open(map, marker);
-          // console.log("clicked!")
-        // });
+          console.log("clicked!")
+        });
 
-      // })(i)
+      })(i)
 
     }
     map.fitBounds(bounds);       //# auto-zoom

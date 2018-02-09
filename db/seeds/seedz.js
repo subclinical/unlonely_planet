@@ -23,7 +23,7 @@ exports.seed = function(knex, Promise) {
           lat: 43.6532,
           lng: -79.3832,
           zoom: 8,
-          creator_id: 1,
+          user_key: '012345',
           date_created: new Date(),
           city: 'Toronto',
           image: 'https://intersectionsmatch.com/wp-content/uploads/2014/09/great-love-debate-toronto-2.jpg'
@@ -34,7 +34,7 @@ exports.seed = function(knex, Promise) {
           lat: 48.8566,
           lng: 2.3522,
           zoom: 8,
-          creator_id: 2,
+          user_key: '012345',
           date_created: new Date(),
           city: 'Paris',
           image: 'https://pictures.tripmasters.com/images/packages/france/paris-eiffeltowergrass200.jpg'
@@ -45,7 +45,7 @@ exports.seed = function(knex, Promise) {
           lat: 31.2304,
           lng: 121.4737,
           zoom: 8,
-          creator_id: 3,
+          user_key: '012345',
           date_created: new Date(),
           city: 'Shanghai',
           image: 'https://pictures.tripmasters.com/images/packages/china/shanghai-citynightview200.jpg'
@@ -67,9 +67,10 @@ exports.seed = function(knex, Promise) {
           label: 'Lighthouse Labs Inc.',
           lat: 43.6532,
           lng: -79.3832,
-          user_id: 1,
+          user_key: '012345',
           date_created: new Date(),
-          description: 'Where productivity and soundproof flooring are mutually exclusive.'
+          description: 'Where productivity and soundproof flooring are mutually exclusive.',
+          image: 'https://www.fillmurray.com/100/100'
         }),
         knex('markers').insert({
           id: 2,
@@ -77,9 +78,10 @@ exports.seed = function(knex, Promise) {
           label: 'Eiffel Tower',
           lat: 48.8566,
           lng: 2.3522,
-          user_id: 2,
+          user_key: '012345',
           date_created: new Date(),
-          description: 'Eiffel like a lot of people come here for sightseeing.'
+          description: 'Eiffel like a lot of people come here for sightseeing.',
+          image: 'https://www.fillmurray.com/100/100'
         }),
         knex('markers').insert({
           id: 3,
@@ -87,9 +89,10 @@ exports.seed = function(knex, Promise) {
           label: 'Anywhere',
           lat: 37.5665,
           lng: 126.9780,
-          user_id: 3,
+          user_key: '012345',
           date_created: new Date(),
-          description: 'New way to experience people surfing.'
+          description: 'New way to experience people surfing.',
+          image: 'https://www.fillmurray.com/100/100'
         }),
         knex('markers').insert({
           id: 4,
@@ -97,9 +100,10 @@ exports.seed = function(knex, Promise) {
           label: 'Brandon\'s House',
           lat: 43.6562,
           lng: -79.3632,
-          user_id: 1,
+          user_key: '012345',
           date_created: new Date(),
-          description: 'Smoking hot.'
+          description: 'Smoking hot.',
+          image: 'https://www.fillmurray.com/100/100'
         }),
         knex('markers').insert({
           id: 5,
@@ -107,9 +111,10 @@ exports.seed = function(knex, Promise) {
           label: 'I dont know.',
           lat: 44.6532,
           lng: -80.3832,
-          user_id: 1,
+          user_key: '012345',
           date_created: new Date(),
-          description: 'UH.'
+          description: 'UH.',
+          image: 'https://www.fillmurray.com/100/100'
         }),
         knex('markers').insert({
           id: 6,
@@ -117,10 +122,27 @@ exports.seed = function(knex, Promise) {
           label: 'Raptors Den.',
           lat: 45.6532,
           lng: -78.3832,
-          user_id: 1,
+          user_key: '012345',
           date_created: new Date(),
-          description: 'HUH.'
+          description: 'HUH.',
+          image: 'https://www.fillmurray.com/110/110'
         }),
-      ]);
+      ])
+      .then( () => {
+        return Promise.all([
+          knex('favourites').insert({
+            map_id: 1,
+            user_key: '012345'
+          }),
+          knex('favourites').insert({
+            map_id: 1,
+            user_key: '123456'
+          }),
+          knex('favourites').insert({
+            map_id: 2,
+            user_key: '234567'
+          })
+        ])
+      });
     })
 };
