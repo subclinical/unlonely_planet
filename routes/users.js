@@ -62,7 +62,40 @@ module.exports = (knex) => {
       .then((match) => {
         if(match[0]) {
           req.session.user_key = match[0].user_key;
-          res.json(match[0]);
+          let profile = {};
+          profile.user = match[0].name;
+          knex
+            .select('*')
+            .from('maps')
+            .where('user_key', match[0].user_key)
+            .then((maps) => {
+              profile.maps = maps;
+              return profile;
+            })
+            .then((profile) => {
+              knex
+                .select('map_id')
+                .from('favourites')
+                .where('user_key', req.session.user_key)
+                .then((map_ids) => {
+                  let ids = [];
+                  for(let map of map_ids) {
+                    for(let id in map) {
+                      ids.push(map[id]);
+                    }
+                  }
+                  console.log(map_ids);
+                  knex
+                    .select('*')
+                    .from('maps')
+                    .whereIn('id', ids)
+                    .then((faves) => {
+                      profile.favourites = faves;
+                      console.log(profile);
+                      res.json(profile);
+                    })
+                })
+            })
         } else {
           res.status(404).send('User not found.');
         }

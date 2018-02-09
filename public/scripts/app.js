@@ -31,9 +31,9 @@ $('.login').on('click', function(event) {
       name: $('.username').val(),
       password: $('.password').val()
     },
-    success: function(user) {
+    success: function(profile) {
       if(!$('#custom').val()) {
-        $('.sidebar_header').append(`<h1 id='custom'>Welcome, ${user.name}.</h1>`);
+        $('.sidebar_header').append(`<h1 id='custom'>Welcome, ${profile.user}.</h1>`);
       } else {
         $('#custom').css('display', 'inline');
       }
