@@ -37,7 +37,7 @@ $(document).ready(function () {
       },
       success: function (profile) {
         if (!$('#custom').val()) {
-          $('.sidebar_header').append(`<h1 id='custom'>Welcome, ${profile.user}.</h1>`);
+          $('.user_info').append(`<h4 id='custom'>Logged in as: ${profile.user}.</h4>`);
           renderUserMaps(profile);
           renderFavouriteMaps(profile);
 
@@ -142,10 +142,22 @@ $(document).ready(function () {
       $(".marker_lng").val(event.latLng.lng);
     });
 
-    $(".save_marker").on('click', function (event) {
+    $(".element_container").on('click', ".save_marker", function (event) {
       event.preventDefault();
       var savedMarker = newMarker
       newMarker = null;
+      $.ajax({
+        method: "POST",
+        url: "/marker",
+        data: {
+          label: $(".marker_name").val(),
+          city: $(".marker_details").val(),
+          image: $(".marker_image").val(),
+          description: $(".marker_description").val(),
+          lat: $(".marker_lat").val(),
+          lng: $(".marker_lng").val(),
+        }
+      })
     });
 
   }
@@ -210,7 +222,9 @@ $(document).ready(function () {
   function renderMapElements(array) {
     let mapHeader = (`
     <h1 class="sidebar_title">Explore Your World</h1>
+    <button class="create_map">Create Map</button>
     `)
+    $(".sidebar_header").empty();
     $(".sidebar_header").append(mapHeader);
     for (map of array) { // point is an object within an array
       // console.log(map)
@@ -259,8 +273,8 @@ $(document).ready(function () {
       <article class="point_element" data-pointID="${escape(point_Id)}">
       <img class="location_pic" src="">
       <span class="point_element_description"> ${escape(point_label)} </span>
-      <button class="edit" value="Edit"></button>
-      <button class="delete" value="Delete"></button>
+      <button class="edit">Edit</button>
+      <button class="delete">Delete</button>
       </article>
     `);
     return pointElement;
@@ -272,6 +286,7 @@ $(document).ready(function () {
     let mapHeader = (`
       <h1 class="sidebar_title">${escape(mapTitle)}</h1>
     `)
+    $(".sidebar_header").empty();
     $(".sidebar_header").append(mapHeader);
 
     for (point of obj.markers) { // point is an object within an array
@@ -286,6 +301,7 @@ $(document).ready(function () {
     let mapHeader = (`
       <h1 class="sidebar_title">${escape(mapTitle)}</h1>
     `)
+    $(".sidebar_header").empty();
     $(".sidebar_header").append(mapHeader);
 
     for (point of obj.markers) { // point is an object within an array
@@ -300,6 +316,7 @@ $(document).ready(function () {
     let mapHeader = (`
       <h1 class="sidebar_title">${escape(mapTitle)}</h1>
     `)
+    $(".sidebar_header").empty();
     $(".sidebar_header").append(mapHeader);
 
     for (point of obj.markers) { // point is an object within an array
@@ -321,7 +338,8 @@ $(document).ready(function () {
     locationContent = (`
     <p>${escape(locationDescription)}</p>
   `);
-
+    $(".sidebar_header").empty();
+    $(".panel_content").empty();
     $(".sidebar_header").append(locationHeader);
     $(".panel_content").append(locationContent);
   };
@@ -345,8 +363,8 @@ $(document).ready(function () {
 
 
 
-  //add new map
-  $(".create_map").on('click', function () {
+  //Create new map
+  $(".sidebar_header").on('click', ".create_map", function () {
     console.log("create map clicked")
     $(this).css("display", "none");
     $('.element_container').empty();
@@ -355,8 +373,8 @@ $(document).ready(function () {
       <form>
       <textarea class="map_name" name="map_name" placeholder="Map Name"></textarea>
       <textarea class="map_image" name="map_image" placeholder="Map Image URL"></textarea>
-      <input class="save_map" type="button" value="Next">
-      <input class="cancel_map" type="button" value="Cancel">
+      <button class="save_map">Next</button>
+      <button class="cancel_map">Cancel</button>
       </form>
       `)
     $(".element_container").append(map_form);
@@ -365,7 +383,7 @@ $(document).ready(function () {
 
 
 
-/* ----- In Progress ----- */
+  /* ----- In Progress ----- */
 
   //create and render location elements and markers (for HC maps)
   $('.element_container').on('click', ".map_element", function (event) {
@@ -392,7 +410,7 @@ $(document).ready(function () {
     let mapID = $(event.target).closest('article').data("mapid");
     $.ajax({
       method: "GET",
-      url: "/maps/search/" + mapID,// locations/points page
+      url: "/maps/edit/" + mapID,// locations/points page
       success: function (map) {
         // console.log(map);
         initMapNoMarker(map);
@@ -420,7 +438,7 @@ $(document).ready(function () {
   })
 
 
-/* ----- ---------- ----- */
+  /* ----- ---------- ----- */
 
 
 
@@ -472,8 +490,8 @@ $(document).ready(function () {
       <textarea class="marker_description" name="marker_description" placeholder="Marker Description"></textarea>
       <textarea class="marker_lat" name="marker_lat" placeholder="Marker Lat (to be hidden"></textarea>
       <textarea class="marker_lng" name="marker_lng" placeholder="Marker Lng (to be hidden"></textarea>
-      <input class="save_marker" type="submit" value="Save">
-      <input class="cancel_map" type="submit" value="Cancel">
+      <button class="save_marker">Save</button>
+      <button class="cancel_map">Cancel</button>
       </form>
       `)
       $(".element_container").append(marker_form);
@@ -498,7 +516,7 @@ $(document).ready(function () {
   })
 
 
-  $(".save_marker").on('click', function (event) {
+  $(".element_container").on('click', ".save_marker", function (event) {
     event.preventDefault();
     $.ajax({
       method: "POST",

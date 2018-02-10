@@ -51,12 +51,11 @@ h1 {
 
 .sidebar_panel {
     // no specific styling for now
+    margin-top: 180px;
 }
 
-.detail_image {
-    // float: right; //keep until final
-    margin-top: 200px;
-    width: 100%;
+.element_container {
+    margin-top: 150px;
 }
 
 .panel_content {
@@ -64,6 +63,14 @@ h1 {
     font-size: 16px;
     padding: 30px 50px 30px 50px;
 }
+
+
+.detail_image {
+    // float: right; //keep until final
+    margin-top: 200px;
+    width: 100%;
+}
+
 
 .point_element {
     border: 1.5px solid lightgrey;
@@ -84,7 +91,7 @@ h1 {
 }
 
 .sidebar_back {
-    display: none;
+    // display: none;
 }
 
 
