@@ -44,6 +44,22 @@ module.exports = (knex) => {
         }
     });
 
+    //deleting an existing map
+    router.delete('/delete/:id', (req, res) => {
+        if(req.session.user_key) {
+            if(mapAccess(req.session.user_key, req.params.id)) {
+                knex('maps')
+                    .where('id', req.params.id)
+                    .del()
+                    .then(() => {
+                        res.status(200).send();
+                    })
+            }
+            res.status(400).send('Map access denied.');
+        }
+        res.status(400).send('Not logged in.');
+    });
+
     //routes post requests for new map creations
     router.post('/new', (req, res) => {
         if(req.session.user_key) {
@@ -91,6 +107,49 @@ module.exports = (knex) => {
             res.status(400).send('Not logged in.');
         }
     });
+
+    //routes to edit markers on a map
+    router.put('/marker/edit/:id', (req, res) => {
+        if (req.session.user_key) {
+            if (markerAccess(req.session.user_key, req.params.id)) {
+                knex('markers')
+                    .where('id', req.params.id)
+                    .update({
+                        label: req.body.label,
+                        city: req.body.city,
+                        lat: req.body.lat,
+                        lng: req.body.lng,
+                        description: req.body.description
+                    }, ['*'])
+                    .then((added) => {
+                        console.log(added);
+                        res.status(200).json(added);
+                    })
+            } else {
+                res.status(404).send('Marker access denied.');
+            }
+        } else {
+            res.status(400).send('Not logged in.');
+        }
+    });
+
+    //delete a marker
+    router.delete('/marker/delete/:id', (req, res) => {
+        if(req.session.user_key) {
+            if(markerAccess(req.session.user_key, req.params.id)) {
+                knex('markers')
+                    .where('id', req.params.id)
+                    .del()
+                    .then(() => {
+                        res.status(200).send();
+                    })
+            }
+            res.status(400).send('Marker access denied.');
+        }
+        res.status(400).send('Not logged in.');
+    });
+
+
     //adding map to user's favourites
     router.post('/favourite', (req, res) => {
         console.log(req.body);
@@ -137,6 +196,36 @@ function loginState(key) {
         .where('user_key', key)
         .then((user) => {
             if(user[0]) {
+                return true;
+            }
+            return false;
+        })
+}
+
+//check if current user is the maker of the map
+function mapAccess(key, map) {
+    knex
+        .select('*')
+        .from('maps')
+        .where('user_key', key)
+        .andWhere('id', map)
+        .then((match) => {
+            if(match[0]) {
+                return true;
+            }
+            return false;
+        })
+}
+
+//check if current user is the maker of the marker
+function markerAccess(key, marker) {
+    knex
+        .select('*')
+        .from('marker')
+        .where('user_key', key)
+        .andWhere('id', marker)
+        .then((match) => {
+            if (match[0]) {
                 return true;
             }
             return false;
