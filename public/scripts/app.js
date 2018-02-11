@@ -16,6 +16,13 @@ $(document).ready(function () {
 
   /* ----- Functions ----- */
 
+  fontsize = function () {
+    var fontSize = $(".sidebar_title").width() * 0.10;
+    $(".header_text").css('font-size', fontSize);
+  };
+  // $(window).resize(fontsize);
+
+
 
 
   function initialRender() {
@@ -143,10 +150,10 @@ $(document).ready(function () {
 
   function renderMapElements(array) {
     let mapHeader = (`
-    <h1 class="sidebar_title">Explore Your World</h1>
+    <h1 class="header_text">Explore Your World</h1>
     `)
-    $(".header_text").empty();
-    $(".header_text").append(mapHeader);
+    $(".sidebar_title").empty();
+    $(".sidebar_title").append(mapHeader);
     for (map of array) { // point is an object within an array
       // console.log(map)
       $(".element_container").append(createMapElement(map));
@@ -214,13 +221,15 @@ $(document).ready(function () {
   function renderLocationElements(obj) {
     let mapTitle = obj.title;
     let mapHeader = (`
-      <h1 class="sidebar_title">${escape(mapTitle)}</h1>
+      <h1 class="header_text">${escape(mapTitle)}</h1>
     `)
-    $(".header_text").empty();
-    $(".header_text").append(mapHeader);
+    $(".sidebar_title").empty();
+    // var fontSize = $(".sidebar_title").width() * 0.10;
+    // console.log(fontSize)
+    // $(".sidebar_title").css('font-size', "12px");
+    $(".sidebar_title").append(mapHeader);
 
     for (point of obj.markers) { // point is an object within an array
-      // console.log(point)
       $(".element_container").append(createLocationElement(point)); //render location elements to one of three div container: element_container(for hard-coded maps), user_maps(for user-created maps), favourite_maps(for favourited maps). The other 2 div will be empty
     }
   }
@@ -229,10 +238,10 @@ $(document).ready(function () {
   function renderUserLocationElements(obj) {
     let mapTitle = obj.title;
     let mapHeader = (`
-      <h1 class="sidebar_title">${escape(mapTitle)}</h1>
+      <h1 class="header_text">${escape(mapTitle)}</h1>
     `)
-    $(".header_text").empty();
-    $(".header_text").append(mapHeader);
+    $(".sidebar_title").empty();
+    $(".sidebar_title").append(mapHeader);
 
     for (point of obj.markers) { // point is an object within an array
       // console.log(point)
@@ -244,10 +253,10 @@ $(document).ready(function () {
   function renderFavouriteLocationElements(obj) {
     let mapTitle = obj.title;
     let mapHeader = (`
-      <h1 class="sidebar_title">${escape(mapTitle)}</h1>
+      <h1 class="header_text">${escape(mapTitle)}</h1>
     `)
-    $(".header_text").empty();
-    $(".header_text").append(mapHeader);
+    $(".sidebar_title").empty();
+    $(".sidebar_title").append(mapHeader);
 
     for (point of obj.markers) { // point is an object within an array
       // console.log(point)
@@ -261,15 +270,15 @@ $(document).ready(function () {
     let point_label = obj.markers.label;
 
     let locationHeader = (`
-      <h1 class="sidebar_title">${escape(point_label)}</h1>
+      <h1 class="header_text">${escape(point_label)}</h1>
     `)
 
     locationContent = (`
     <p>${escape(locationDescription)}</p>
   `);
-    $(".header_text").empty();
+    $(".sidebar_title").empty();
     $(".panel_content").empty();
-    $(".header_text").append(locationHeader);
+    $(".sidebar_title").append(locationHeader);
     $(".panel_content").append(locationContent);
   };
 
