@@ -35,8 +35,6 @@ module.exports = (knex) => {
                     .where('map_id', req.params.id)
                     .then((marker_info) => {
                         map_info[0].markers = marker_info;
-                        console.log(marker_info);
-                        console.log(req.session.user_key);
                         res.json(map_info[0]);
                     })
             });
@@ -94,13 +92,30 @@ module.exports = (knex) => {
                 res.status(400).send('Not logged in.');
             }
     });
+
+    //routes get requests to render map via map_id and all associated markers
+    router.get('/marker/search/:id', (req, res) => {
+        if (!req.params.id) {
+            throw new Error();
+        } else {
+            knex
+                .select('*')
+                .from('markers')
+                .where('id', req.params.id)
+                .then((marker_info) => {
+                    console.log(marker_info)
+                    res.json(marker_info[0]);
+                })
+        }
+    });
+
     //routes to edit markers on a map
-    router.post('/marker/edit/:id', (req, res) => {
+    router.put('/marker/edit/:id', (req, res) => {
         if (req.session.user_key) {
             knex
                 .select('*')
-                .from('maps')
-                .where('id', req.body.map_id)
+                .from('markers')
+                .where('id', req.params.id)
                 .andWhere('user_key', req.session.user_key)
                 .then((match) => {
                     if(match[0]) {
@@ -116,7 +131,6 @@ module.exports = (knex) => {
                                     description: req.body.description
                                 }, ['*'])
                                 .then((added) => {
-                                    // console.log(added);
                                     res.status(200).json(added);
                                 })
                         } else {

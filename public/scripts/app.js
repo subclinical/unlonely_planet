@@ -557,7 +557,7 @@ $(document).ready(function () {
     let mapID = $(event.target).closest('article').data("mapid");
     $.ajax({
       method: "DELETE",
-      url: "/maps/favourite/delete" + mapID,// locations/points page
+      url: "/maps/favourite/delete/" + mapID,// locations/points page
       success: function (map) {
         initialRender();
         renderMapElements(maps);
