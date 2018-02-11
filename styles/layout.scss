@@ -43,19 +43,20 @@ h1 {
     margin-left: 10px;
 }
 
-.back_button {
-    color: lightgrey;
-    font-weight: 300;
-    margin-left: 10px;
-}
-
 .sidebar_panel {
-    // no specific styling for now
     margin-top: 180px;
 }
 
+input.username {
+    font-size: 12px;
+}
+
+input.password {
+    font-size: 12px;
+}
+
 .element_container {
-    margin-top: 150px;
+    // margin-top: 150px;
 }
 
 .panel_content {
@@ -64,13 +65,11 @@ h1 {
     padding: 30px 50px 30px 50px;
 }
 
-
 .detail_image {
     // float: right; //keep until final
     margin-top: 200px;
     width: 100%;
 }
-
 
 .point_element {
     border: 1.5px solid lightgrey;
@@ -94,8 +93,21 @@ h1 {
     // display: none;
 }
 
-
-.create_map {
+.delete_map {
     color: white;
-    font-size: 16px;
+    background-color: red;
+    position: fixed;
+    bottom: 0px;
+    display: none;
 }
+
+.remove_favourite {
+    color: white;
+    background-color: red;
+    display: none;
+}
+
+// .create_map {
+//     color: white;
+//     font-size: 16px;
+// }
