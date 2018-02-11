@@ -39,31 +39,17 @@
 
 <body>
 
-<!-- Experiment with Bootstrap -->
-<!-- <div class="container">
-
-    <div class="row">
-
-        <div class="col-md-9"></div>
-            <div id="map"></div>
-        <div class="col-md-3"></div>
-
-    </div>
-</div> -->
-
-
-
     <!-- Map here -->
     <div id="map"></div>
 
 
     <!-- Right nav bar (fixed) -->
     <div class="sidebar">
-        
+
         <header class="sidebar_header">
-            <button class="sidebar_back">Back</button>
-            <div class="header_text"></div>
-            <button class="create_map">Create Map</button>
+            <button type="button" class="btn btn-outline-primary sidebar_back">Back</button>
+            <div class="sidebar_title"></div>
+            <button type="button" class="btn btn-outline-primary create_map">Create Map</button>
         </header>
 
         <div class="sidebar_panel">
@@ -71,23 +57,25 @@
                 <form>
                     <input class="username" name="username" placeholder="Username">
                     <input class="password" name="password" type="password" placeholder="********">
-                    <input class="login" type="submit" value="Log in">
+                    <button type="button" class="btn btn-outline-secondary btn-sm login">Login</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm reg">Register</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm logout">Logout</button>
                 </form>
-                <button class="reg">Register</button>
-                <button class="logout">Log out</button>
 
             </div>
-            
-            <div class="element_container">
 
+            <div class="element_container">
+                <h6 class="popular_maps">Popular Maps</h6>
             </div>
 
             <div class="user_maps">
+                <h6 class="user_maps">Your Maps</h6>
                 <button class="delete_map">Delete Map</button>
             </div>
-            
+
             <div class="favourite_maps">
-                    <button class="remove_favourite">Remove from Favourites</button>
+                <h6 class="favourite_maps">Favourite Maps</h6>
+                <button class="remove_favourite">Remove from Favourites</button>
             </div>
 
             <div class="panel_content">
