@@ -82,7 +82,8 @@ module.exports = (knex) => {
                             }, ['*'])
                             .into('maps')
                             .then((newMap) => {
-                                res.status(200).send("NICE");
+                                console.log(newMap);
+                                res.status(200).json(newMap[0]);
                             });
                     } else {
                         res.status(404).send('User not recognized.');
@@ -173,6 +174,7 @@ module.exports = (knex) => {
     //routes to post markers on a map
     router.post('/marker', (req, res) => {
         if(req.session.user_key) {
+            console.log(req.body.map_id);
             knex
                 .select('*')
                 .from('maps')

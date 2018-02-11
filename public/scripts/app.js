@@ -425,6 +425,9 @@ $(document).ready(function () {
           title: $(".map_name").val(),
           map_image: $(".map_image").val()
         },
+        success: function(newMap) {
+          console.log(newMap);
+        }
       })
       initMapWithMarker();
       $(".element_container").empty();
@@ -451,10 +454,10 @@ $(document).ready(function () {
   $(".element_container").on('click', ".save_marker", function (event) {
     event.preventDefault();
     let mapID = $(event.target).closest('article').data("mapid");
-    let pointID = $(event.target).closest('article').data("pointID");
+    // let pointID = $(event.target).closest('article').data("pointID");
     $.ajax({
       method: "POST",
-      url: "/maps/marker/" + pointID,
+      url: "/maps/marker",// + pointID,
       data: {
         map_id: mapID,
         label: $(".marker_name").val(),
