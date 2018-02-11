@@ -5,6 +5,7 @@
     <!-- Meta Information -->
     <title>unLonely Planet</title>
 
+
     <!-- External CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
@@ -20,30 +21,37 @@
     <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
 
 
-
     <!-- External JS -->
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
 
-    <!-- App JS -->
-    <!-- <script>
-        var map;
-        function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 51.5074, lng: -0.1278 },
-                zoom: 8
-            });
-        }
-    </script> -->
 
-    <script type="text/javascript" src="../scripts/app.js"></script>
+
+    <!-- App JS -->
+    <script type="text/javascript" src="/scripts/app.js"></script>
+
 
 
     <!-- Font awesome icons -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
 </head>
 
 
 <body>
+
+<!-- Experiment with Bootstrap -->
+<!-- <div class="container">
+
+    <div class="row">
+
+        <div class="col-md-9"></div>
+            <div id="map"></div>
+        <div class="col-md-3"></div>
+
+    </div>
+</div> -->
+
+
 
     <!-- Map here -->
     <div id="map"></div>
@@ -51,31 +59,50 @@
 
     <!-- Right nav bar (fixed) -->
     <div class="sidebar">
-
+        
         <header class="sidebar_header">
-
-            <button class="sidebar_back" name="sidebar_back" type="button">Back</button>
-            <input class="create_map" name="create_map" type="button" value="Create your own map">
-            </header>
-
-
+            <button class="sidebar_back">Back</button>
+            <div class="header_text"></div>
+            <button class="create_map">Create Map</button>
         </header>
 
         <div class="sidebar_panel">
-            <div class="detail_image">
-                <!-- <img src="/images/london.jpg"> -->
+            <div class="user_info">
+                <form>
+                    <input class="username" name="username" placeholder="Username">
+                    <input class="password" name="password" type="password" placeholder="********">
+                    <input class="login" type="submit" value="Log in">
+                </form>
+                <button class="reg">Register</button>
+                <button class="logout">Log out</button>
+
             </div>
-            <button class="reg">Register</button>
-
-            <form>
-                <input class="username" name="username" placeholder="Username">
-                <input class="password" name="password" type="password" placeholder="********">
-                <input class="login" type="submit" value="Log in">
-            </form>
-
-            <button class="logout">Log out</button>
-
+            
             <div class="element_container">
+
+            </div>
+
+            <div class="user_maps">
+                <button class="delete_map">Delete Map</button>
+            </div>
+            
+            <div class="favourite_maps">
+                    <button class="remove_favourite">Remove from Favourites</button>
+            </div>
+
+            <div class="panel_content">
+                <!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In finibus imperdiet sagittis. Duis pellentesque
+                    vel eros vel feugiat. Donec condimentum, urna a sagittis imperdiet, erat nisl scelerisque dolor, in consequat
+                    nibh ipsum a dolor. Morbi vel volutpat lorem, vel iaculis tellus. Morbi nec velit ultricies neque pharetra
+                    hendrerit. Vivamus sed nisi pellentesque, varius nunc ut, vulputate tellus. Nullam in mattis sapien,
+                    et finibus mi. Aenean nec dui placerat leo viverra maximus sed vitae nunc. Maecenas est risus, elementum
+                    at efficitur vitae, tempus quis ante. Fusce lacinia blandit euismod. Donec eu vehicula arcu. Quisque
+                    gravida arcu ut quam malesuada, a rutrum leo lobortis. Aliquam quis tempor nunc. In cursus eget dui in
+                    mollis. Maecenas finibus urna nec felis ornare blandit. Etiam mauris magna, luctus sed ullamcorper eu,
+                    convallis vel ipsum. Praesent accumsan dolor erat, at elementum nisi scelerisque quis. Aenean elementum
+                    tristique odio, sed dignissim justo posuere sed. Quisque hendrerit velit tempus enim rutrum, non gravida
+                    convallis vel ipsum. Praesent accumsan dolor erat, at elementum nisi scelerisque quis. Aenean elementum
+                </p> -->
 
             </div>
         </div>
