@@ -450,11 +450,13 @@ $(document).ready(function () {
   //NEED TO VERIFY: if specific marker data will be added to the new map created
   $(".element_container").on('click', ".save_marker", function (event) {
     event.preventDefault();
+    let mapID = $(event.target).closest('article').data("mapid");
     let pointID = $(event.target).closest('article').data("pointID");
     $.ajax({
       method: "POST",
       url: "/maps/marker/" + pointID,
       data: {
+        map_id: mapID,
         label: $(".marker_name").val(),
         city: $(".marker_details").val(),
         image: $(".marker_image").val(),
