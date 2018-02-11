@@ -10,7 +10,6 @@ $(document).ready(function () {
     }
   })
 
-
   /* ----- Functions ----- */
 
   function initialRender() {
@@ -97,7 +96,7 @@ $(document).ready(function () {
       newMarker = null;
       $.ajax({
         method: "POST",
-        url: "/marker",
+        url: "/maps/marker",
         data: {
           label: $(".marker_name").val(),
           city: $(".marker_details").val(),
@@ -417,7 +416,7 @@ $(document).ready(function () {
     } else {
       $.ajax({
         method: "POST",
-        url: "/new",
+         url: "/maps/new",
         data: {
           title: $(".map_name").val(),
           map_image: $(".map_image").val()
@@ -428,6 +427,7 @@ $(document).ready(function () {
 
       let marker_form = (`
       <form>
+
       <textarea class="marker_name" name="marker_name" placeholder="Marker Name"></textarea>
 
       <textarea class="marker_details"name="marker_details" placeholder="Marker City/Country"></textarea>
@@ -468,10 +468,13 @@ $(document).ready(function () {
       alert("Please Enter A Description for Your Location")
     }
 
+    let mapID = $(event.target).closest('article').data("mapid");
+    let pointID = $(event.target).closest('article').data("pointID");
     $.ajax({
       method: "POST",
-      url: "/marker",
+      url: "/maps/marker/" + pointID,
       data: {
+        map_id: mapID,
         label: $(".marker_name").val(),
         city: $(".marker_details").val(),
         image: $(".marker_image").val(),
@@ -508,9 +511,10 @@ $(document).ready(function () {
   $('.user_maps').on('click', ".save_edited_marker", function (event) {
 
     let mapID = $(event.target).closest('article').data("mapid");
+    let pointID = $(event.target).closest('article').data("pointID");
     $.ajax({
       method: "PUT",
-      url: "/maps/marker/edit/" + mapID,
+      url: "/maps/marker/edit/" + pointID,
       data: {
         label: $(".marker_name").val(),
         city: $(".marker_details").val(),
@@ -533,9 +537,10 @@ $(document).ready(function () {
     $('.element_container').empty();
 
     let mapID = $(event.target).closest('article').data("mapid");
+    let pointID = $(event.target).closest('article').data("pointID");
     $.ajax({
       method: "DELETE",
-      url: "/maps/marker/delete/" + mapID,
+      url: "/maps/marker/delete/" + pointID,
       success: function (map) {
         initMapWithMarker(map);
         renderLocationElements(map);
@@ -574,7 +579,7 @@ $(document).ready(function () {
     let mapID = $(event.target).closest('article').data("mapid");
     $.ajax({
       method: "DELETE",
-      url: "/maps/favourite/" + mapID,// locations/points page
+      url: "/maps/favourite/delete" + mapID,// locations/points page
       success: function (map) {
         initialRender();
         renderMapElements(maps);
@@ -589,10 +594,10 @@ $(document).ready(function () {
   $(".element_container").on('click', ".location_element", function () {
     $('.element_container').empty(); // if needed
     $('.sidebar_back').css("display", "block")
-    let locationID = $(this).data("locationID")
+    let pointID = $(event.target).closest('article').data("pointID");
     $.ajax({
       method: "GET",
-      url: "/maps/search/" + locationID, //  location details page
+      url: "/maps/search/" + pointID, //  location details page
       success: renderLocationDetails
     })
   })

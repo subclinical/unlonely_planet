@@ -84,7 +84,7 @@ module.exports = (knex) => {
                       ids.push(map[id]);
                     }
                   }
-                  console.log(map_ids);
+                  // console.log(map_ids);
                   knex
                     .select('*')
                     .from('maps')
