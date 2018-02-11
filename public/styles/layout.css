@@ -30,29 +30,74 @@ h1 {
 .sidebar_header {
   background-color: #297cbb;
   height: 180px;
-  width: 100%;
+  width: 35%;
   position: fixed;
-  padding: 20px 20px 10px;
+  padding: 20px;
 }
 
-.sidebar_title {
+.header_text {
   color: white;
-  font-weight: 500;
-  font-size: 46px;
-  margin-top: 10px;
-  margin-left: 10px;
+  font-weight: 300;
+  margin-top: 5px;
+  margin-bottom: 15px;
 }
 
 .sidebar_panel {
-  margin-top: 180px;
+  margin-top: 200px;
+}
+
+.user_info {
+  display: block;
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 input.username {
   font-size: 12px;
+  width: 120px;
+  height: 28px;
 }
 
 input.password {
   font-size: 12px;
+  width: 120px;
+  height: 28px;
+}
+
+h6.popular_maps {
+  border-bottom: 1px dotted lightgrey;
+  color: grey;
+  margin-top: 15px;
+  margin-left: 15px;
+}
+
+h6.user_maps {
+  border-bottom: 1px dotted lightgrey;
+  color: grey;
+  margin-top: 15px;
+  margin-left: 15px;
+}
+
+h6.favourite_maps {
+  border-bottom: 1px dotted lightgrey;
+  color: grey;
+  margin-top: 15px;
+  margin-left: 15px;
+}
+
+.map_element {
+  border: 1.5px solid lightgrey;
+  margin: 20px 40px 20px 40px;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.point_element {
+  border: 1.5px solid lightgrey;
+  margin: 20px 40px 20px 40px;
+  font-size: 20px;
+  padding: 10px;
 }
 
 .panel_content {
@@ -63,24 +108,6 @@ input.password {
 .detail_image {
   margin-top: 200px;
   width: 100%;
-}
-
-.point_element {
-  border: 1.5px solid lightgrey;
-  margin: 20px 40px 20px 40px;
-  font-size: 20px;
-  padding: 20px;
-}
-
-.map_element {
-  border: 1.5px solid lightgrey;
-  margin: 20px 40px 20px 40px;
-  font-size: 20px;
-  padding: 20px;
-}
-
-.fa-chevron-left {
-  color: white;
 }
 
 .delete_map {
