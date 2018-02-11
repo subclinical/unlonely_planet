@@ -190,7 +190,30 @@ module.exports = (knex) => {
         }
     });
     
-
+    //adding map to user's favourites
+    router.delete('/favourite/delete', (req, res) => {
+        if (req.session.user_key) {
+            knex
+                .select('*')
+                .from('favourites')
+                .where('map_id', req.body.map_id)
+                .where('user_key', req.session.user_key)
+                .then((user) => {
+                    if (user[0]) {
+                        knex('favourites')
+                            .where('map_id', req.body.map_id)
+                            .del()
+                            .then(() => {
+                                res.status(200).send('Unfavourited.');
+                            })
+                    } else {
+                        res.status(404).send('Match not found.');
+                    }
+                });
+        } else {
+            res.status(400).send('Not logged in.');
+        }
+    });
 
     //adding map to user's favourites
     router.post('/favourite', (req, res) => {
