@@ -1,75 +1,21 @@
 $(document).ready(function () {
-
   $.ajax({
     url: '/maps',
     method: 'GET',
     success: function (maps) {
       initialRender();
       renderMapElements(maps);
+      renderFavouriteMaps(maps);
+      renderUserMaps(maps);
     }
   })
 
-  // on mouseover, display marker's infoWindow
-  // on mouseleave, hide marker's infoWindow
 
-
-
-  // on mouseover, display marker's infoWindow
-  // on mouseleave, hide marker's infoWindow
-  $('.reg').on('click', function (event) {
-    $.ajax({
-      url: '/api/users/register',
-      method: 'POST',
-      data: {
-        name: 'banjo',
-        password: '1234',
-        success: function () {
-          console.log('User registered.');
-        }
-      }
-    })
-  });
-
-  $('.login').on('click', function (event) {
-    event.preventDefault();
-    $.ajax({
-      url: '/api/users/login',
-      method: 'POST',
-      data: {
-        name: $('.username').val(),
-        password: $('.password').val()
-      },
-      success: function (profile) {
-        if (!$('#custom').val()) {
-          $('.sidebar_header').append(`<h1 id='custom'>Welcome, ${profile.user}.</h1>`);
-        } else {
-          $('#custom').css('display', 'inline');
-        }
-      },
-    })
-  });
-
-  $('.logout').on('click', function (event) {
-    $.ajax({
-      url: '/api/users/logout',
-      method: 'POST',
-      success: function () {
-        $('#custom').css('display', 'none');
-      }
-    })
-  });
-
-
-  //on document.load, create and render map elements (home page), there should be no markers
-  //header should show "Explore your world", back button should be hidden
-
-  // var map;
-  // bounds = new google.maps.LatLngBounds();
-
+  /* ----- Functions ----- */
 
   function initialRender() {
     let map = new google.maps.Map(document.getElementById('map'), {
-      center: { lat: 0, lng: 0},
+      center: { lat: 30, lng: 0 },
       zoom: 2
     });
   }
@@ -112,42 +58,7 @@ $(document).ready(function () {
   }
 
 
-  function initMap() {
-    mylatLng = { lat: 0, lng: 0}
-
-
-    var mapOptions = {
-      center: mylatLng, // this is from mapID
-      zoom: 2
-    }
-
-    var newMarker;
-    var bounds = new google.maps.LatLngBounds();
-
-    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-
-    // map.fitBounds(bounds);       //# auto-zoom
-    // map.panToBounds(bounds);     // # auto-center
-
-    // listen for a click and run function addMarker on a click:
-
-    google.maps.event.addListener(map, 'click', function (event) {
-      if (newMarker) {
-        newMarker.setMap(null)
-      };
-
-      newMarker = addMarker({ coords: event.latLng });
-      $(".marker_coords").val(event.latLng.lng);
-      console.log(event.latLng)
-
-    });
-
-
-    $(".save_marker").on('click', function (event) {
-      event.preventDefault();
-      var savedMarker = newMarker
-      newMarker = null;
-    });
+  function initMapWithMarker() {
 
     function addMarker(props) {
       var marker = new google.maps.Marker({
@@ -161,10 +72,50 @@ $(document).ready(function () {
       return marker;
     }
 
+    var mapOptions = {
+      center: { lat: 0, lng: 0 }, // this is from mapID
+      zoom: 2
+    }
+
+    var newMarker;
+    var bounds = new google.maps.LatLngBounds();
+    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+    // listen for a click and run function addMarker on a click:
+    google.maps.event.addListener(map, 'click', function (event) {
+      if (newMarker) {
+        newMarker.setMap(null)
+      };
+      newMarker = addMarker({ coords: event.latLng });
+      $(".marker_lat").val(event.latLng.lat);
+      $(".marker_lng").val(event.latLng.lng);
+    });
+
+    $(".element_container").on('click', ".save_marker", function (event) {
+      event.preventDefault();
+      var savedMarker = newMarker
+      newMarker = null;
+      $.ajax({
+        method: "POST",
+        url: "/marker",
+        data: {
+          label: $(".marker_name").val(),
+          city: $(".marker_details").val(),
+          image: $(".marker_image").val(),
+          description: $(".marker_description").val(),
+          lat: $(".marker_lat").val(),
+          lng: $(".marker_lng").val(),
+        }
+      })
+    });
   }
 
 
-
+  function escape(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
 
 
   function createMapElement(obj) {
@@ -181,47 +132,42 @@ $(document).ready(function () {
     return mapElement;
   }
 
+
   function renderMapElements(array) {
     let mapHeader = (`
     <h1 class="sidebar_title">Explore Your World</h1>
     `)
-    $(".sidebar_header").append(mapHeader);
+    $(".header_text").empty();
+    $(".header_text").append(mapHeader);
     for (map of array) { // point is an object within an array
-      console.log(map)
+      // console.log(map)
       $(".element_container").append(createMapElement(map));
     }
   }
 
 
+  function renderFavouriteMaps(obj) {
+    $("remove_favourite").css("display", "block");
+    for (map of obj.favourites) { //obj.favourites is an array
+      console.log(map)
+      $(".favourite_maps").append(createMapElement(map));
+    }
+  }
 
 
-
-  //create and render location elements (specific map page) and markers
-
-  $('.element_container').on('click', ".map_element", function (event) {
-    $('.element_container').empty(); // if needed
-    $('.sidebar_back').css("display", "block")
-    // console.log(event.target);
-    let mapID = $(event.target).closest('article').data("mapid");
-    // console.log(mapID);
-    $.ajax({
-      method: "GET",
-      url: "/maps/search/" + mapID,// locations/points page
-      success: function (map) {
-        // console.log(map);
-        initMapNoMarker(map);
-        renderLocationElements(map);
-      }
-    })
-  })
-
+  function renderUserMaps(obj) {
+    $("delete_map").css("display", "block");
+    for (map of obj.maps) { //obj.maps is an array, this points to the maps generated by the user
+      console.log(map)
+      $(".user_maps").append(createMapElement(map));
+    }
+  }
 
 
   function createLocationElement(marker) {
     let point_Id = marker.id;
     let point_label = marker.label;
     let point_description = marker.description;
-
 
     pointElement = (`
       <article class="point_element" data-pointID="${escape(point_Id)}">
@@ -233,35 +179,66 @@ $(document).ready(function () {
   };
 
 
+  function createLocationElementPlus(marker) { //this function renders location elements along with edit and delete button along each of them, this function is only used in renderUserLocationElements
+    let point_Id = marker.id;
+    let point_label = marker.label;
+    let point_description = marker.description;
+
+    pointElement = (`
+      <article class="point_element" data-pointID="${escape(point_Id)}">
+      <img class="location_pic" src="">
+      <span class="point_element_description"> ${escape(point_label)} </span>
+      <button class="edit_marker">Edit</button>
+      <button class="delete_marker">Delete</button>
+      </article>
+    `);
+    return pointElement;
+  };
+
+
   function renderLocationElements(obj) {
-    console.log(obj);
     let mapTitle = obj.title;
     let mapHeader = (`
       <h1 class="sidebar_title">${escape(mapTitle)}</h1>
     `)
-    $(".sidebar_header").append(mapHeader);
+    $(".header_text").empty();
+    $(".header_text").append(mapHeader);
 
     for (point of obj.markers) { // point is an object within an array
       // console.log(point)
-      $(".element_container").append(createLocationElement(point));
+      $(".element_container").append(createLocationElement(point)); //render location elements to one of three div container: element_container(for hard-coded maps), user_maps(for user-created maps), favourite_maps(for favourited maps). The other 2 div will be empty
     }
   }
 
 
+  function renderUserLocationElements(obj) {
+    let mapTitle = obj.title;
+    let mapHeader = (`
+      <h1 class="sidebar_title">${escape(mapTitle)}</h1>
+    `)
+    $(".header_text").empty();
+    $(".header_text").append(mapHeader);
 
-  //create and render location details (specific location page)
+    for (point of obj.markers) { // point is an object within an array
+      // console.log(point)
+      $(".user_maps").append(createLocationElementPlus(point)); //render location elements to one of three div container: element_container(for hard-coded maps), user_maps(for user-created maps), favourite_maps(for favourited maps). The other 2 div will be empty
+    }
+  }
 
-  $(document).on('click', ".location_element", function () {
-    $('.element_container').empty(); // if needed
-    $('.sidebar_back').css("display", "block")
-    let locationID = $(this).data("locationID")
-    $.ajax({
-      method: "GET",
-      url: "/maps/search/" + locationID, //  location details page
-      success: renderLocationDetails
-    })
-  })
 
+  function renderFavouriteLocationElements(obj) {
+    let mapTitle = obj.title;
+    let mapHeader = (`
+      <h1 class="sidebar_title">${escape(mapTitle)}</h1>
+    `)
+    $(".header_text").empty();
+    $(".header_text").append(mapHeader);
+
+    for (point of obj.markers) { // point is an object within an array
+      // console.log(point)
+      $(".favourite_maps").append(createLocationElement(point)); //render location elements to one of three div container: element_container(for hard-coded maps), user_maps(for user-created maps), favourite_maps(for favourited maps). The other 2 div will be empty
+    }
+  }
 
 
   function renderLocationDetails(obj) {
@@ -275,64 +252,196 @@ $(document).ready(function () {
     locationContent = (`
     <p>${escape(locationDescription)}</p>
   `);
-
-
-    $(".sidebar_header").append(locationHeader);
+    $(".header_text").empty();
+    $(".panel_content").empty();
+    $(".header_text").append(locationHeader);
     $(".panel_content").append(locationContent);
   };
 
 
 
 
-  //add new map
-  $(".create_map").on('click', function () {
-    console.log("create map clicked")
-    $(this).css("display", "none");
+
+  /* ----- Event Listeners ----- */
+
+
+  $('.reg').on('click', function (event) {
+    $.ajax({
+      url: '/api/users/register',
+      method: 'POST',
+      data: {
+        name: $('.username').val(),
+        password: $('password').val(),
+        success: function () {
+          console.log('User registered.');
+        }
+      }
+    })
+  });
+
+
+  $('.login').on('click', function (event) {
+    event.preventDefault();
+    $.ajax({
+      url: '/api/users/login',
+      method: 'POST',
+      data: {
+        name: $('.username').val(),
+        password: $('.password').val()
+      },
+      success: function (profile) {
+        if (!$('#custom').val()) {
+          $('.user_info').append(`<h4 id='custom'>Logged in as: ${profile.user}.</h4>`);
+          renderUserMaps(profile);
+          renderFavouriteMaps(profile);
+        } else {
+          $('#custom').css('display', 'inline');
+          renderUserMaps(profile);
+          renderFavouriteMaps(profile);
+        }
+      },
+    })
+  });
+
+
+  $('.logout').on('click', function (event) {
+    $.ajax({
+      url: '/api/users/logout',
+      method: 'POST',
+      success: function () {
+        $('#custom').css('display', 'none');
+      }
+    })
+  });
+
+
+  //on click (of "sidebar_back" button), render "home page"
+  $(".sidebar_header").on('click', ".sidebar_back", function (maps) {
+    event.preventDefault();
     $('.element_container').empty();
-
-
-    let map_form = (`
-      <form>
-      <textarea class="map_name" name="map_name" placeholder="Map Name"></textarea>
-
-      <input class="save_map" type="button" value="Next">
-      <input class="cancel_map" type="button" value="Cancel">
-      </form>
-      `)
-
-    $(".element_container").append(map_form);
-
+    console.log("back clicked");
+    $.ajax({
+      url: '/maps',
+      method: 'GET',
+      success: function (maps) {
+        initialRender();
+        renderMapElements(maps);
+        renderFavouriteMaps(maps);
+        renderUserMaps(maps);
+      }
+    })
   })
 
 
-  //save map button //user will only be able to create 1 marker at a time until they click the save marker button
-  $(".element_container").on('click', ".save_map", function (event) {
-    console.log("clicked save_map")
+
+
+  //on click (of a hard-coded/seed map), render location elements and markers
+  $('.element_container').on('click', ".map_element", function (event) {
+    $('.element_container').empty();
+    $('.sidebar_back').css("display", "block")
+
+    let mapID = $(event.target).closest('article').data("mapid");
+    $.ajax({
+      method: "GET",
+      url: "/maps/search/" + mapID,// locations/points page
+      success: function (map) {
+        // console.log(map);
+        initMapNoMarker(map);
+        renderLocationElements(map);
+      }
+    })
+  })
+
+
+  //on click (of a user-created map), render location elements and markers
+  $('.user_maps').on('click', ".map_element", function (event) {
+    $('.element_container').empty(); // if needed
+    $('.sidebar_back').css("display", "block")
+
+    let mapID = $(event.target).closest('article').data("mapid");
+    $.ajax({
+      method: "GET",
+      url: "/maps/search/" + mapID,// was /maps/edit (need to verify)
+      success: function (map) {
+        initMapNoMarker(map);
+        renderUserLocationElements(map); //this will show list of locations along with edit/delete button for each element
+      }
+    })
+  })
+
+
+  //on click (of a favourited map), render location elements and markers
+  $('.favourite_maps').on('click', ".map_element", function (event) {
+    $('.element_container').empty(); // if needed
+    $('.sidebar_back').css("display", "block")
+
+    let mapID = $(event.target).closest('article').data("mapid");
+    $.ajax({
+      method: "GET",
+      url: "/maps/search/" + mapID,// locations/points page
+      success: function (map) {
+        // console.log(map);
+        initMapNoMarker(map);
+        renderLocationElements(map);
+      }
+    })
+  })
+
+
+  //on click (of "Create a Map" button), append/display form to sidebar
+  $(".sidebar_header").on('click', ".create_map", function () {
+    // $(this).css("display", "none");
+    console.log($(this))
+    $('.element_container').empty();
+
+    let map_form = (`
+      <h1>Create your own map by entering the information below and hitting next or save:</h1>
+
+      <form>
+      <textarea class="map_name" name="map_name" placeholder="Map Name"></textarea>
+      <textarea class="map_image" name="map_image" placeholder="Map Image URL"></textarea>
+      <button class="next">Next</button>
+      <button class="cancel_map">Cancel</button>
+      </form>
+      `)
+    $(".element_container").append(map_form);
+  })
+
+
+  //on click (of "Next" button), allow user to add markers, and display form for marker's details
+  $(".element_container").on('click', ".next", function (event) {
     event.preventDefault();
-    if ($("textarea").val().length === 0) {
+    console.log($(".map_name").val())
+    if ($(".map_name").val().length === 0) {
       alert("Please Enter Map Name")
     } else {
       $.ajax({
         method: "POST",
         url: "/new",
-        data: { title: $(".map_name").val() }
-
-        // success: initMap(map)
+        data: {
+          title: $(".map_name").val(),
+          map_image: $(".map_image").val()
+        },
       })
-      console.log($(".map_name").val())
-
-      initMap();
+      initMapWithMarker();
       $(".element_container").empty();
 
       let marker_form = (`
       <form>
-      <textarea name="marker_name" placeholder="Marker Name"></textarea>
-      <textarea name="marker_details" placeholder="Marker City/Country"></textarea>
-      <textarea name="marker_image" placeholder="Marker Image URL"></textarea>
-      <textarea name="marker_description" placeholder="Marker Description"></textarea>
-      <textarea class="marker_coords" name="marker_coords" placeholder="Marker Coords (to be hidden"></textarea>
-      <input class="save_marker" type="submit" value="Save">
-      <input class="cancel_map" type="submit" value="Cancel">
+      <textarea class="marker_name" name="marker_name" placeholder="Marker Name"></textarea>
+
+      <textarea class="marker_details"name="marker_details" placeholder="Marker City/Country"></textarea>
+
+      <textarea class="marker_image"name="marker_image" placeholder="Marker Image URL"></textarea>
+
+      <textarea class="marker_description" name="marker_description" placeholder="Marker Description"></textarea>
+
+      <textarea class="marker_lat" name="marker_lat" placeholder="Marker Lat (to be hidden"></textarea>
+
+      <textarea class="marker_lng" name="marker_lng" placeholder="Marker Lng (to be hidden"></textarea>
+
+      <button class="save_marker">Save</button>
+      <button class="cancel_map">Cancel</button>
       </form>
       `)
       $(".element_container").append(marker_form);
@@ -340,51 +449,178 @@ $(document).ready(function () {
   })
 
 
-  // cancel button  //clear container, show list of maps page
-  $("form").on('click', '.cancel_map', function (event) {
+  //on click (of "save marker" button), POST marker data to /marker
+  //NEED TO VERIFY: if specific marker data will be added to the new map created
+  $(".element_container").on('click', ".save_marker", function (event) {
     event.preventDefault();
-    console.log("cancel map clicked")
-    // $('.element_container').empty(); // if needed
-    // $.ajax({
-    //   method: "GET",
-    //   url: "/maps", // maps page
-    //   success: function (map) {
-    //     initMap(map); //display world view with list of available maps
-    //   }
-    // })
+    // dont we need an alert here if
+    console.log($(".marker_name").val())
+    console.log($(".marker_details").val())
+    console.log($(".marker_description").val())
+
+    if ($(".marker_name").val().length === 0) {
+      alert("Please Enter a Name of Your Location")
+    }
+    if ($(".marker_details").val().length === 0) {
+      alert("Please Enter A City Name for Your Location")
+    }
+    if ($(".marker_description").val().length === 0) {
+      alert("Please Enter A Description for Your Location")
+    }
+
+    $.ajax({
+      method: "POST",
+      url: "/marker",
+      data: {
+        label: $(".marker_name").val(),
+        city: $(".marker_details").val(),
+        image: $(".marker_image").val(),
+        description: $(".marker_description").val(),
+        lat: $(".marker_lat").val(),
+        lng: $(".marker_lng").val(),
+      }
+    })
   })
 
 
-  // $(".save_marker").on('click', function (event) {
-  //   event.preventDefault();
-  //   $.ajax({
-  //     method: "POST",
-  //     url: "/maps",
-  // success:
-  // })
-  //clear marker form
-  //save marker on the map
-  // })
+  //on click (of "edit marker" button) inside a specific user-created map, display form to edit that marker's data
+  $('.user_maps').on('click', ".edit_marker", function (event) {
+    $('.element_container').empty();
+
+    let marker_form = (`
+      <form>
+      <textarea class="marker_name" name="marker_name" placeholder="Marker Name"></textarea>
+      <textarea class="marker_details"name="marker_details" placeholder="Marker City/Country"></textarea>
+      <textarea class="marker_image"name="marker_image" placeholder="Marker Image URL"></textarea>
+      <textarea class="marker_description" name="marker_description" placeholder="Marker Description"></textarea>
+      <textarea class="marker_lat" name="marker_lat" placeholder="Marker Lat (to be hidden"></textarea>
+      <textarea class="marker_lng" name="marker_lng" placeholder="Marker Lng (to be hidden"></textarea>
+      <button class="save_edited_marker">Save</button>
+      <button class="cancel_map">Cancel</button>
+      </form>
+      `)
+    $(".element_container").append(marker_form);
+  })
+
+
+  //on click (of "save edited marker" button), PUT edited marker data to /maps/marker/edit/:id
+  //then render/refresh the map and list of locations
+  $('.user_maps').on('click', ".save_edited_marker", function (event) {
+
+    let mapID = $(event.target).closest('article').data("mapid");
+    $.ajax({
+      method: "PUT",
+      url: "/maps/marker/edit/" + mapID,
+      data: {
+        label: $(".marker_name").val(),
+        city: $(".marker_details").val(),
+        lat: $(".marker_lat").val(),
+        lng: $(".marker_lng").val(),
+        description: $(".marker_description").val(),
+        image: $(".marker_image").val()
+      },
+      success: function (map) {
+        initMapWithMarker(map);
+        renderLocationElements(map);
+      }
+    })
+  })
+
+
+  //on click (of "delete marker" button), delete a marker
+  //then render/refresh the map and list of locations
+  $('.user_maps').on('click', ".delete_marker", function (event) {
+    $('.element_container').empty();
+
+    let mapID = $(event.target).closest('article').data("mapid");
+    $.ajax({
+      method: "DELETE",
+      url: "/maps/marker/delete/" + mapID,
+      success: function (map) {
+        initMapWithMarker(map);
+        renderLocationElements(map);
+      }
+    })
+  })
+
+
+  //on click (of "delete map" button), delete map
+  //then render/refresh "home page"
+  $('.user_maps').on('click', ".delete_map", function (event) {
+    $('.element_container').empty();
+    $(this).css("display", "none");
+
+    let mapID = $(event.target).closest('article').data("mapid");
+    $.ajax({
+      method: "DELETE",
+      url: "/maps/delete/" + mapID,
+      success: function (map) {
+        initialRender();
+        renderMapElements(maps);
+        renderFavouriteMaps(maps);
+        renderUserMaps(maps);
+      }
+    })
+  })
+
+
+  //THIS ROUTE NEEDS TO BE ADDED
+  //on click (of "delete favourite map" button), delete map
+  //then render/refresh "home page"
+  $('.favourite_maps').on('click', ".remove_favourite", function (event) {
+    $('.element_container').empty();
+    $(this).css("display", "none");
+
+    let mapID = $(event.target).closest('article').data("mapid");
+    $.ajax({
+      method: "DELETE",
+      url: "/maps/favourite/" + mapID,// locations/points page
+      success: function (map) {
+        initialRender();
+        renderMapElements(maps);
+        renderFavouriteMaps(maps);
+        renderUserMaps(maps);
+      }
+    })
+  })
+
+
+  //on click (of a specific location in a map), render location details
+  $(".element_container").on('click', ".location_element", function () {
+    $('.element_container').empty(); // if needed
+    $('.sidebar_back').css("display", "block")
+    let locationID = $(this).data("locationID")
+    $.ajax({
+      method: "GET",
+      url: "/maps/search/" + locationID, //  location details page
+      success: renderLocationDetails
+    })
+  })
+
+
+  //on click (of "cancel" button)
+  //clear container, show list of maps page ("home page")
+  $(".element_container").on('click', '.cancel_map', function (event) {
+    event.preventDefault();
+    $('.element_container').empty(); // if needed
+    $(".create_map").css("display", "block");
+    console.log("cancel map clicked")
+    $.ajax({
+      url: '/maps',
+      method: 'GET',
+      success: function (maps) {
+        initialRender();
+        renderMapElements(maps);
+      }
+    })
+  })
+
+
+}) //end of document.ready
 
 
 
 
-
-
-  //when add marker (only when on create map page), display sidebar form
-  // $("#map").on('click', function () {
-  //   $('.element_container').empty(); // if needed
-  // })
-
-
-})
-
-
-
-
-function escape(str) {
-  var div = document.createElement('div');
-  div.appendChild(document.createTextNode(str));
-  return div.innerHTML;
-}
-
+// To-dos
+// on mouseover, display marker's infoWindow
+// on mouseleave, hide marker's infoWindow
