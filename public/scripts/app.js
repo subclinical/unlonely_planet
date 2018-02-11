@@ -425,6 +425,15 @@ $(document).ready(function () {
           title: $(".map_name").val(),
           map_image: $(".map_image").val()
         },
+        success: function (obj) {
+          let mapTitle = obj.title;
+          let mapHeader = (`
+            <h1 class="sidebar_title">${escape(mapTitle)}</h1>
+          `)
+          $(".sidebar_title").empty();
+          $(".sidebar_title").append(mapHeader);
+        }
+
       })
       initMapWithMarker();
       $(".element_container").empty();
