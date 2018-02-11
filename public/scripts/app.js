@@ -27,10 +27,11 @@ $(document).ready(function () {
 
 
   function initMapNoMarker(maps) {
-    mylatLng = { lat: maps.markers[0].lat, lng: maps.markers[0].lng }
+    mylatLng = { lat: 43.6446, lng: -79.3952 }
 
     var mapOptions = {
-      center: mylatLng // this is from mapID
+      center: mylatLng,
+      zoom: 2 // this is from mapID
     }
 
     var bounds = new google.maps.LatLngBounds();
@@ -100,18 +101,18 @@ $(document).ready(function () {
       event.preventDefault();
       var savedMarker = newMarker
       newMarker = null;
-      $.ajax({
-        method: "POST",
-        url: "/maps/marker",
-        data: {
-          label: $(".marker_name").val(),
-          city: $(".marker_details").val(),
-          image: $(".marker_image").val(),
-          description: $(".marker_description").val(),
-          lat: $(".marker_lat").val(),
-          lng: $(".marker_lng").val(),
-        }
-      })
+    //   // $.ajax({
+    //   //   method: "POST",
+    //   //   url: "/maps/marker",
+    //   //   data: {
+    //   //     label: $(".marker_name").val(),
+    //   //     city: $(".marker_details").val(),
+    //   //     image: $(".marker_image").val(),
+    //   //     description: $(".marker_description").val(),
+    //   //     lat: $(".marker_lat").val(),
+    //   //     lng: $(".marker_lng").val(),
+    //   //   }
+    //   // })
     });
   }
 
@@ -126,12 +127,14 @@ $(document).ready(function () {
   function createMapElement(obj) {
     let mapId = obj.id;
     let mapTitle = obj.title;
-    let mapCity = obj.city;
-
+    let map_image = 'https://www.fillmurray.com/200/200';
+    if (obj.image) {
+      map_image = obj.image;
+    }
     let mapElement = (`
     <article class="map_element" data-mapid="${mapId}">
+    <img class="location_pic" src="${map_image}">
       <span class="map_element_title"> ${mapTitle} </span>
-      <span class="map_element_city"> ${mapCity} </span>
     </article>
     `)
     return mapElement;
@@ -173,10 +176,14 @@ $(document).ready(function () {
     let point_Id = marker.id;
     let point_label = marker.label;
     let point_description = marker.description;
+    let point_image = 'https://www.fillmurray.com/200/200';
+    if (marker.image) {
+      point_image = marker.image;
+    }
 
     pointElement = (`
       <article class="point_element" data-pointID="${escape(point_Id)}">
-      <img class="location_pic" src="">
+      <img class="location_pic" src="${point_image}">
       <span class="point_element_description"> ${escape(point_label)} </span>
       </article>
     `);
@@ -188,10 +195,13 @@ $(document).ready(function () {
     let point_Id = marker.id;
     let point_label = marker.label;
     let point_description = marker.description;
-
+    let point_image = 'https://www.fillmurray.com/200/200';
+    if(marker.image) {
+      point_image = marker.image;
+    }
     pointElement = (`
       <article class="point_element" data-pointID="${escape(point_Id)}">
-      <img class="location_pic" src="">
+      <img class="location_pic" src="${point_image}">
       <span class="point_element_description"> ${escape(point_label)} </span>
       <button class="edit_marker">Edit</button>
       <button class="delete_marker">Delete</button>
@@ -276,9 +286,10 @@ $(document).ready(function () {
       method: 'POST',
       data: {
         name: $('.username').val(),
-        password: $('password').val(),
+        password: $('.password').val(),
         success: function () {
-          console.log('User registered.');
+          $('.user_info').append('<p id="reg-message">Registration complete, please log in.</p>');
+          $('.username, .password').val('');
         }
       }
     })
@@ -295,16 +306,21 @@ $(document).ready(function () {
         password: $('.password').val()
       },
       success: function (profile) {
-        if (!$('#custom').val()) {
+          $('.element_container').empty();
+          $('.user_maps').empty();
+          $('.favourite_maps').empty();
+        // if (!$('#custom').val()) {
           $('.user_info').append(`<h4 id='custom'>Logged in as: ${profile.user}.</h4>`);
           renderUserMaps(profile);
           renderFavouriteMaps(profile);
-        } else {
-          $('#custom').css('display', 'inline');
-          renderUserMaps(profile);
-          renderFavouriteMaps(profile);
-        }
-      },
+        // } else {
+        //   $('#custom').css('display', 'inline');
+        //   renderUserMaps(profile);
+        //   renderFavouriteMaps(profile);
+        // }
+        $('.username, .password').val('');
+        $('.logout').css('display', 'inline');
+      }
     })
   });
 
@@ -314,7 +330,21 @@ $(document).ready(function () {
       url: '/api/users/logout',
       method: 'POST',
       success: function () {
-        $('#custom').css('display', 'none');
+        $('#custom').text('');
+        $.ajax({
+          url: '/maps',
+          method: 'GET',
+          success: function (maps) {
+            $('.element_container').empty();
+            $('.user_maps').empty();
+            $('.favourite_maps').empty();
+            $('.logout').css('display', 'none');
+            initialRender();
+            renderMapElements(maps);
+            renderFavouriteMaps(maps);
+            renderUserMaps(maps);
+          }
+        })
       }
     })
   });
@@ -368,6 +398,9 @@ $(document).ready(function () {
       method: "GET",
       url: "/maps/search/" + mapID,// was /maps/edit (need to verify)
       success: function (map) {
+        $('.element_container').empty();
+        $('.user_maps').empty();
+        $('.favourite_maps').empty();
         initMapNoMarker(map);
         renderUserLocationElements(map); //this will show list of locations along with edit/delete button for each element
       }
@@ -385,6 +418,9 @@ $(document).ready(function () {
       method: "GET",
       url: "/maps/search/" + mapID,// locations/points page
       success: function (map) {
+        $('.element_container').empty();
+        $('.user_maps').empty();
+        $('.favourite_maps').empty();
         // console.log(map);
         initMapNoMarker(map);
         renderLocationElements(map);
@@ -428,7 +464,7 @@ $(document).ready(function () {
         success: function (obj) {
           let mapTitle = obj.title;
           let mapHeader = (`
-            <h1 class="sidebar_title">${escape(mapTitle)}</h1>
+            <h1 id="current-map" data-mapid=${obj.id}>${escape(mapTitle)}</h1>
           `)
           $(".sidebar_title").empty();
           $(".sidebar_title").append(mapHeader);
@@ -459,7 +495,7 @@ $(document).ready(function () {
   //NEED TO VERIFY: if specific marker data will be added to the new map created
   $(".element_container").on('click', ".save_marker", function (event) {
     event.preventDefault();
-    let mapID = $(event.target).closest('article').data("mapid");
+    let mapID = $('#current-map').data("mapid");
     // let pointID = $(event.target).closest('article').data("pointID");
     $.ajax({
       method: "POST",
@@ -516,7 +552,7 @@ $(document).ready(function () {
         image: $(".marker_image").val()
       },
       success: function (map) {
-        initMapWithMarker(map);
+        initMapNoMarker(map);
         renderLocationElements(map);
       }
     })
@@ -534,7 +570,7 @@ $(document).ready(function () {
       method: "DELETE",
       url: "/maps/marker/delete/" + pointID,
       success: function (map) {
-        initMapWithMarker(map);
+        initMapNoMarker(map);
         renderLocationElements(map);
       }
     })

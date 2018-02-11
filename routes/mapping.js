@@ -174,7 +174,6 @@ module.exports = (knex) => {
     //routes to post markers on a map
     router.post('/marker', (req, res) => {
         if(req.session.user_key) {
-            console.log(req.body.map_id);
             knex
                 .select('*')
                 .from('maps')
