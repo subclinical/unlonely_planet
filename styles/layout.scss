@@ -43,26 +43,32 @@ h1 {
     margin-left: 10px;
 }
 
-.back_button {
-    color: lightgrey;
-    font-weight: 300;
-    margin-left: 10px;
+.sidebar_panel {
+    margin-top: 180px;
 }
 
-.sidebar_panel {
-    // no specific styling for now
+input.username {
+    font-size: 12px;
+}
+
+input.password {
+    font-size: 12px;
+}
+
+// .element_container {
+//     // margin-top: 150px;
+// }
+
+.panel_content {
+    // float:right; //keep until final
+    font-size: 16px;
+    padding: 30px 50px 30px 50px;
 }
 
 .detail_image {
     // float: right; //keep until final
     margin-top: 200px;
     width: 100%;
-}
-
-.panel_content {
-    // float:right; //keep until final
-    font-size: 16px;
-    padding: 30px 50px 30px 50px;
 }
 
 .point_element {
@@ -83,12 +89,25 @@ h1 {
     color: white;
 }
 
-.sidebar_back {
+// .sidebar_back {
+//     // display: none;
+// }
+
+.delete_map {
+    color: white;
+    background-color: red;
+    position: fixed;
+    bottom: 0px;
     display: none;
 }
 
-
-.create_map {
+.remove_favourite {
     color: white;
-    font-size: 16px;
+    background-color: red;
+    display: none;
 }
+
+// .create_map {
+//     color: white;
+//     font-size: 16px;
+// }
