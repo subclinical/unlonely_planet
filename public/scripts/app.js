@@ -9,12 +9,12 @@ $(document).ready(function () {
     }
   })
 
-  // on mouseover, display marker's infoWindow 
+  // on mouseover, display marker's infoWindow
   // on mouseleave, hide marker's infoWindow
 
 
 
-  // on mouseover, display marker's infoWindow 
+  // on mouseover, display marker's infoWindow
   // on mouseleave, hide marker's infoWindow
   $('.reg').on('click', function (event) {
     $.ajax({
@@ -69,14 +69,14 @@ $(document).ready(function () {
 
   function initialRender() {
     let map = new google.maps.Map(document.getElementById('map'), {
-      center: { lat: 51.5074, lng: -0.1278 },
+      center: { lat: 0, lng: 0},
       zoom: 2
     });
   }
 
 
   function initMapNoMarker(maps) {
-    mylatLng = { lat: maps.markers[0].lat, lng: maps.markers[0].lng }
+    mylatLng = { lat: 0, lng: 0 };
 
     var mapOptions = {
       center: mylatLng // this is from mapID
@@ -113,7 +113,7 @@ $(document).ready(function () {
 
 
   function initMap() {
-    mylatLng = { lat: 51.5, lng: -0.1 }
+    mylatLng = { lat: 0, lng: 0}
 
 
     var mapOptions = {
@@ -126,8 +126,8 @@ $(document).ready(function () {
 
     var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-    map.fitBounds(bounds);       //# auto-zoom
-    map.panToBounds(bounds);     // # auto-center
+    // map.fitBounds(bounds);       //# auto-zoom
+    // map.panToBounds(bounds);     // # auto-center
 
     // listen for a click and run function addMarker on a click:
 
@@ -137,7 +137,8 @@ $(document).ready(function () {
       };
 
       newMarker = addMarker({ coords: event.latLng });
-      $(".marker_coords").val(event.latLng);
+      $(".marker_coords").val(event.latLng.lng);
+      console.log(event.latLng)
 
     });
 
@@ -314,9 +315,12 @@ $(document).ready(function () {
       $.ajax({
         method: "POST",
         url: "/new",
-        data: { title: $("textarea .map_name").val() }
+        data: { title: $(".map_name").val() }
+
         // success: initMap(map)
       })
+      console.log($(".map_name").val())
+
       initMap();
       $(".element_container").empty();
 
@@ -356,7 +360,7 @@ $(document).ready(function () {
   //   $.ajax({
   //     method: "POST",
   //     url: "/maps",
-  // success: 
+  // success:
   // })
   //clear marker form
   //save marker on the map
