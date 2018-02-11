@@ -16,19 +16,24 @@ $(document).ready(function () {
 
   // on mouseover, display marker's infoWindow 
   // on mouseleave, hide marker's infoWindow
-  $('.reg').on('click', function (event) {
-    $.ajax({
-      url: '/api/users/register',
-      method: 'POST',
-      data: {
-        name: 'banjo',
-        password: '1234',
-        success: function () {
-          console.log('User registered.');
-        }
-      }
-    })
-  });
+$('.reg').on('click', function(event) {
+  $.ajax({
+    url: '/maps/marker/delete/4',
+    method: 'DELETE',
+    // data: {
+    //   label: 'banjo',
+    //   city: 'metropolis',
+    //   map_id: 4,
+    //   lat: 123,
+    //   lng: 90,
+    //   description: 'work please'
+    // },
+    success: function() {
+      console.log('User registered.');
+    }
+  })
+});
+
 
   $('.login').on('click', function (event) {
     event.preventDefault();
@@ -186,7 +191,7 @@ $(document).ready(function () {
     `)
     $(".sidebar_header").append(mapHeader);
     for (map of array) { // point is an object within an array
-      console.log(map)
+      // console.log(map)
       $(".element_container").append(createMapElement(map));
     }
   }
@@ -233,7 +238,7 @@ $(document).ready(function () {
 
 
   function renderLocationElements(obj) {
-    console.log(obj);
+    // console.log(obj);
     let mapTitle = obj.title;
     let mapHeader = (`
       <h1 class="sidebar_title">${escape(mapTitle)}</h1>
@@ -313,8 +318,8 @@ $(document).ready(function () {
     } else {
       $.ajax({
         method: "POST",
-        url: "/new",
-        data: { title: $("textarea .map_name").val() }
+        url: "/maps/new",
+        data: {title: $("textarea .map_name").val()}
         // success: initMap(map)
       })
       initMap();
