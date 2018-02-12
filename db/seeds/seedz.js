@@ -40,14 +40,14 @@ exports.seed = function(knex, Promise) {
         }),
         knex('maps').insert({
           id: 4,
-          title: 'Everybody Loves Vancouver',
+          title: 'Vancouver Pride',
           user_key: '012345',
           date_created: new Date(),
           image: 'http://centreforinquiry.ca/wp-content/uploads/2013/05/vancouver-skyline-200x200.jpg'
         }),
         knex('maps').insert({
           id: 5,
-          title: 'Restaurants in Rio de Janeiro',
+          title: 'Rio de Janeiro Eats',
           user_key: '012345',
           date_created: new Date(),
           image: 'http://masterbedroomideas.eu/wp-content/uploads/2016/08/1243848-december-26-2015-rio-de-janeiro-travel-image-galleries-200x200.jpg'
@@ -90,7 +90,7 @@ exports.seed = function(knex, Promise) {
         knex('markers').insert({
           id: 3,
           map_id: 3,
-          label: 'Extra Gourmet 12-star Bistro',
+          label: 'Extra Gourmet',
           lat: 31.234816,
           lng: 121.519654,
           user_key: '012345',
@@ -198,7 +198,7 @@ exports.seed = function(knex, Promise) {
         knex('markers').insert({
           id: 12,
           map_id: 2,
-          label: 'Notre Dame de Paris',
+          label: 'Notre Dame',
           lat: 48.852968,
           lng: 2.349902,
           user_key: '012345',
@@ -210,7 +210,7 @@ exports.seed = function(knex, Promise) {
         knex('markers').insert({
           id: 13,
           map_id: 3,
-          label: 'Oriental Pearl Tower',
+          label: 'Pearl Tower',
           lat: 31.239689,
           lng: 121.499755,
           user_key: '012345',

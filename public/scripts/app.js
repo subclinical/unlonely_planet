@@ -36,7 +36,7 @@ $(document).ready(function () {
 
     var mapOptions = {
       center: mylatLng,
-      zoom: 2 // this is from mapID
+      zoom: 6 // this is from mapID
     }
 
 
@@ -424,10 +424,10 @@ $(document).ready(function () {
 
   //WORKINPROGRESS
   $('.element_container').on('click', '#favourite-map', function (event) {
-    event.stopPropagation();
+    // event.stopPropagation();
     event.preventDefault();
     console.log("clicked favourite")
-    let mapID = $('#mapidcarrier').data('mapid');
+    let mapID = $(event.target).closest('#mapidcarrier').data('mapid');
     console.log(mapID);
     $.ajax({
       url: '/maps/favourite',
