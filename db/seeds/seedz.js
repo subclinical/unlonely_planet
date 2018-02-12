@@ -308,19 +308,11 @@ exports.seed = function(knex, Promise) {
         return Promise.all([
           knex('favourites').insert({
             map_id: 1,
-            user_key: '012345'
-          }),
-          knex('favourites').insert({
-            map_id: 1,
             user_key: '123456'
           }),
           knex('favourites').insert({
             map_id: 2,
             user_key: '234567'
-          }),
-          knex('favourites').insert({
-            map_id: 2,
-            user_key: '012345'
           }),
           knex('favourites').insert({
             map_id: 2,
