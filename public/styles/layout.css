@@ -231,10 +231,18 @@ h6#favourite_maps {
   display: none;
 }
 
+.element_container .edit_marker, .element_container .delete_marker {
+  display: none;
+}
+
 .user_maps #favourite-map {
   display: none;
 }
 
 .favourite_maps #favourite-map {
+  display: none;
+}
+
+.favourite_maps .edit_marker, .favourite_maps .delete_marker {
   display: none;
 }

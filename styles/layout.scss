@@ -233,10 +233,24 @@ h6#favourite_maps {
     display: none;
 }
 
-.user_maps #favourite-map {
-    display: none;
+.element_container {
+    .edit_marker, .delete_marker {
+        display: none;
+    }
 }
 
-.favourite_maps #favourite-map {
-    display: none;
+
+.user_maps {
+    #favourite-map {
+        display: none;
+    }
+}
+
+.favourite_maps {
+    #favourite-map {
+        display: none;
+    }
+    .edit_marker, .delete_marker {
+        display: none;
+    }
 }

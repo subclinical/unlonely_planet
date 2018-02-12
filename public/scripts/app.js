@@ -132,7 +132,9 @@ $(document).ready(function () {
     let mapId = obj.id;
     let mapTitle = obj.title;
     let map_image = 'http://freedesignfile.com/upload/2017/08/earth-icon-vector.png';
-
+    if(obj.image) {
+      map_image = obj.image;
+    }
     let mapElement = (`
     <article class="map_element" id="mapidcarrier" data-mapid="${mapId}">
     <img class="location_pic" src="${map_image}">
@@ -188,9 +190,9 @@ $(document).ready(function () {
     let point_label = marker.label;
     let point_description = marker.description;
     let point_image = 'http://freedesignfile.com/upload/2017/08/earth-icon-vector.png';
-    // if (marker.image) {
-    //   point_image = marker.image;
-    // }
+    if (marker.image) {
+      point_image = marker.image;
+    }
 
     pointElement = (`
       <article class="point_element" data-pointid="${escape(point_Id)}">
@@ -207,9 +209,9 @@ $(document).ready(function () {
     let point_label = marker.label;
     let point_description = marker.description;
     let point_image = 'http://freedesignfile.com/upload/2017/08/earth-icon-vector.png';
-    // if(marker.image) {
-    //   point_image = marker.image;
-    // }
+    if(marker.image) {
+      point_image = marker.image;
+    }
     pointElement = (`
       <article class="point_element" data-pointid="${escape(point_Id)}">
       <img class="location_pic" src="${point_image}">
