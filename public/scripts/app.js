@@ -137,9 +137,10 @@ $(document).ready(function () {
       map_image = obj.image;
     }
     let mapElement = (`
-    <article class="map_element" data-mapid="${mapId}">
+    <article class="map_element" id="mapidcarrier" data-mapid="${mapId}">
     <img class="location_pic" src="${map_image}">
       <span class="map_element_title"> ${mapTitle} </span>
+      <button type='button' id='favourite-map'>MICHAEL</button>
     </article>
     `)
     return mapElement;
@@ -152,6 +153,7 @@ $(document).ready(function () {
     `)
     $(".sidebar_title").empty();
     $(".sidebar_title").append(mapHeader);
+    
     $('.element_container').append('<h6 id="popular_maps">Popular Maps</h6>')
     for (map of array) { // point is an object within an array
       // console.log(map)
@@ -375,6 +377,22 @@ $(document).ready(function () {
       }
     })
   })
+  //WORKINPROGRESS
+  $('.sidebar_title').on('click', '#favourite-map', function(event) {
+    event.preventDefault();
+    // event.stopPropagation();
+    let mapID = $('#mapidcarrier').data('mapid');
+    $.ajax({
+      url: '/maps/favourite',
+      method: 'POST',
+      data: {
+        map_id: mapID
+      },
+      success: function() {
+        console.log('Favourite added');
+      }
+    })
+  });
 
 
 
