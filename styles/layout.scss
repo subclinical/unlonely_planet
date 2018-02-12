@@ -27,9 +27,6 @@ h1 {
     float: right;
 }
 
-// .sidebar_back {
-//     // display: none;
-// }
 .sidebar_header {
     background-color: #297cbb;
     height: 180px;
@@ -40,9 +37,19 @@ h1 {
 
 .header_text {
     color: white;
+    font-size: 36px;
     font-weight: 300;
     margin-top: 5px;
-    margin-bottom: 15px
+    margin-bottom: 15px;
+    padding-left: 12px;
+}
+
+.btn.create_map {
+    color: white;
+}
+
+.btn.sidebar_back {
+    color: white;
 }
 
 .sidebar_panel {
@@ -68,40 +75,136 @@ input.password {
     height: 28px;
 }
 
-h6.popular_maps {
+#reg-message {
+    margin: 15px;
+}
+
+h4#custom {
+    font-size: 16px;
+    color: grey;
+    margin-top: 10px;
+}
+
+.new_map {
+    display: block;
+    text-align: center;
+}
+
+textarea.map_name {
+    display: block;
+    font-size: 13px;
+    width: 300px;
+    height: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    margin-bottom: 15px;
+}
+
+textarea.map_image {
+    display: block;
+    font-size: 13px;
+    width: 300px;
+    height: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.btn.next {
+    width: 120px;
+    margin: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.marker_form {
+    display: block;
+    text-align: center;
+    margin: 30px;
+    font-size: 13px;
+}
+
+.btn.save_marker {
+    width: 120px;
+    margin: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h6#popular_maps {
     border-bottom: 1px dotted lightgrey;
     color: grey;
     margin-top: 15px;
     margin-left: 15px;
 }
 
-h6.user_maps {
+h6#user_maps {
+    border-bottom: 1px dotted lightgrey;
+    color: grey;
+    margin-top: 25px;
+    margin-left: 15px;
+}
+
+h6#favourite_maps {
     border-bottom: 1px dotted lightgrey;
     color: grey;
     margin-top: 15px;
     margin-left: 15px;
 }
 
-h6.favourite_maps {
-    border-bottom: 1px dotted lightgrey;
-    color: grey;
-    margin-top: 15px;
-    margin-left: 15px;
+.location_pic {
+    width: 50px;
+    height: 50px;
 }
 
 .map_element {
     border: 1.5px solid lightgrey;
     margin: 20px 40px 20px 40px;
-
     font-size: 16px;
     padding: 10px;
+}
+
+.map_element_title {
+    margin-left: 5px;
+}
+
+.btn#favourite-map {
+    font-size: 12px;
+    float: right;
+    margin-top: 10px;
+}
+
+.btn.edit_marker {
+    font-size: 12px;
+    float: right;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.btn.delete_marker {
+    font-size: 12px;
+    float: right;
+    margin-top: 10px;
+}
+
+.btn.save_edited_marker {
+    width: 120px;
+    margin: 5px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .point_element {
     border: 1.5px solid lightgrey;
     margin: 20px 40px 20px 40px;
-    font-size: 20px;
+    font-size: 16px;
     padding: 10px;
+}
+
+.point_element_description {
+    margin-left: 5px;
 }
 
 .panel_content {
@@ -129,8 +232,3 @@ h6.favourite_maps {
     background-color: red;
     display: none;
 }
-
-// .create_map {
-//     color: white;
-//     font-size: 16px;
-// }

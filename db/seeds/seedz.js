@@ -19,7 +19,7 @@ exports.seed = function(knex, Promise) {
         // Inserts seed maps
         knex('maps').insert({
           id: 1,
-          title: 'Places in Toronto Worth Getting on the Public Transit for',
+          title: 'Must-See in Toronto',
           user_key: '012345',
           date_created: new Date(),
           image: 'https://intersectionsmatch.com/wp-content/uploads/2014/09/great-love-debate-toronto-2.jpg'
@@ -40,7 +40,7 @@ exports.seed = function(knex, Promise) {
         }),
         knex('maps').insert({
           id: 4,
-          title: 'Everybody loves Vancouver',
+          title: 'Everybody Loves Vancouver',
           user_key: '012345',
           date_created: new Date(),
           image: 'http://centreforinquiry.ca/wp-content/uploads/2013/05/vancouver-skyline-200x200.jpg'
@@ -52,13 +52,6 @@ exports.seed = function(knex, Promise) {
           date_created: new Date(),
           image: 'http://masterbedroomideas.eu/wp-content/uploads/2016/08/1243848-december-26-2015-rio-de-janeiro-travel-image-galleries-200x200.jpg'
         }),
-        knex('maps').insert({
-          id: 6,
-          title: 'Come Here During the Offseason, Otherwise Crowding is an Issue',
-          user_key: '012345',
-          date_created: new Date(),
-          image: 'https://www.keele.ac.uk/media/keeleuniversity/generalimagebank/200x200px/antarctica-200x200.jpg'
-        })
       ]);
     })
     .then( () => {
@@ -310,18 +303,6 @@ exports.seed = function(knex, Promise) {
           image: 'https://igx.4sqi.net/img/general/200x200/72271806__PxoZiBT4nksxjwIEctRa0fDalC26oGi3C6aRn0lQLA.jpg',
           city: 'Rio de Janeiro'
         }),
-        knex('markers').insert({
-          id: 21,
-          map_id: 6,
-          label: 'McDonald\'s',
-          lat: -62.940930,
-          lng: -60.555375,
-          user_key: '012345',
-          date_created: new Date(),
-          description: 'Breakfast items now available all day!',
-          image: 'http://sdmcdonalds.com/wp-content/uploads/2015/04/all-day-breakfast.png',
-          city: 'Deception Island'
-        })
       ])
       .then( () => {
         return Promise.all([
@@ -348,10 +329,6 @@ exports.seed = function(knex, Promise) {
           knex('favourites').insert({
             map_id: 4,
             user_key: '234567'
-          }),
-          knex('favourites').insert({
-            map_id: 6,
-            user_key: '012345'
           }),
           knex('favourites').insert({
             map_id: 5,
